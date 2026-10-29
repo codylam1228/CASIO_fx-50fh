@@ -1,0 +1,3488 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CASIO fx-50FH II — Minimalist Edition</title>
+  <style>
+    :root {
+      --bg-page: #f4f4f0;
+      --bg-panel: #ffffff;
+      --bg-calc: #e8e8e3;
+      --bg-calc-inner: #deded8;
+      --bg-lcd: #cdd6c8;
+      --lcd-text: #182019;
+      --text-main: #18181b;
+      --text-muted: #71717a;
+      --border-color: #d4d4d0;
+      --key-num-bg: #27272a;
+      --key-num-text: #fafafa;
+      --key-fn-bg: #3f3f46;
+      --key-fn-text: #f4f4f5;
+      --key-top-bg: #a1a1aa;
+      --key-top-text: #18181b;
+      --key-prog-bg: #ea580c;
+      --key-prog-text: #ffffff;
+      --key-ac-bg: #dc2626;
+      --key-ac-text: #ffffff;
+      --c-shift: #d97706;
+      --c-alpha: #dc2626;
+      --c-base: #059669;
+      --c-cmplx: #7c3aed;
+      --c-sd: #2563eb;
+      --accent: #18181b;
+      --surface-hover: #f4f4f5;
+      --chip-bg: #f8fafc;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0f1115;
+      --bg-panel: #181b20;
+      --bg-calc: #22262e;
+      --bg-calc-inner: #1b1e24;
+      --bg-lcd: #96a694;
+      --lcd-text: #111912;
+      --text-main: #f4f4f5;
+      --text-muted: #9ca3af;
+      --border-color: #2e333d;
+      --key-num-bg: #2d323b;
+      --key-num-text: #f4f4f5;
+      --key-fn-bg: #3b424f;
+      --key-fn-text: #f4f4f5;
+      --key-top-bg: #6b7280;
+      --key-top-text: #ffffff;
+      --c-shift: #f59e0b;
+      --c-alpha: #f87171;
+      --c-base: #34d399;
+      --c-cmplx: #a78bfa;
+      --c-sd: #60a5fa;
+      --accent: #f4f4f5;
+      --surface-hover: #262b35;
+      --chip-bg: #12151a;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "Segoe UI", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      user-select: none;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    /* 主雙欄置中容器：確保左側計數機完美置中且絕不被拉長 */
+    .app-layout {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    @media (max-width: 860px) {
+      .app-layout {
+        flex-direction: column;
+        align-items: center;
+      }
+      .side-panel {
+        max-width: 356px !important;
+      }
+    }
+
+    /* 極簡主義計數機機身 */
+    .calc-case {
+      width: 356px;
+      height: 640px;
+      background-color: var(--bg-calc);
+      border-radius: 20px;
+      padding: 18px 16px 22px;
+      border: 1px solid var(--border-color);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .top-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 0 2px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+
+    .brand-title {
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 1px;
+      color: var(--text-main);
+    }
+
+    .model-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .solar-cell {
+      width: 72px;
+      height: 18px;
+      background-color: #2c2523;
+      border-radius: 3px;
+      border: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .solar-cell::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent, transparent 17px, rgba(255,255,255,0.12) 17px, rgba(255,255,255,0.12) 18px);
+    }
+
+    .hkeaa-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2px;
+      margin-bottom: 10px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .hkeaa-tag {
+      color: var(--key-prog-bg);
+      font-weight: 800;
+    }
+
+    /* 極簡高對比 LCD 螢幕 */
+    .lcd-screen {
+      background-color: var(--bg-lcd);
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      border-radius: 8px;
+      height: 92px;
+      padding: 6px 10px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .lcd-badges {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8.5px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 800;
+      color: var(--lcd-text);
+      height: 13px;
+      border-bottom: 1px solid rgba(24, 32, 25, 0.14);
+    }
+
+    .badge-sub {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+    }
+
+    .ind {
+      opacity: 0.15;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+
+    .ind.on {
+      opacity: 1;
+      background: var(--lcd-text);
+      color: var(--bg-lcd);
+    }
+
+    .lcd-input {
+      font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--lcd-text);
+      min-height: 24px;
+      white-space: pre;
+      overflow-x: auto;
+      scrollbar-width: none;
+      display: flex;
+      align-items: center;
+    }
+
+    .lcd-input::-webkit-scrollbar { display: none; }
+
+    .lcd-result {
+      font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--lcd-text);
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      min-height: 28px;
+    }
+
+    .prompt-lbl {
+      font-size: 13px;
+      font-weight: 700;
+      margin-right: 6px;
+      white-space: nowrap;
+    }
+
+    .ans-str {
+      margin-left: auto;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .cursor-blink {
+      display: inline-block;
+      background: var(--lcd-text);
+      color: var(--bg-lcd);
+      width: 9px;
+      height: 18px;
+      line-height: 18px;
+      text-align: center;
+      animation: blink 0.9s steps(1) infinite;
+    }
+
+    .cursor-ins {
+      display: inline-block;
+      border: 2px solid var(--lcd-text);
+      background: transparent;
+      color: var(--lcd-text);
+      width: 9px;
+      height: 18px;
+      line-height: 14px;
+      text-align: center;
+      animation: blink 0.9s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0.1; }
+    }
+
+    /* 鍵盤網格與極簡按鍵 */
+    .key-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+
+    .lbl-row-top {
+      display: flex;
+      justify-content: center;
+      gap: 3px;
+      font-size: 8.5px;
+      font-weight: 700;
+      height: 11px;
+      line-height: 1;
+      margin-bottom: 2px;
+      white-space: nowrap;
+    }
+
+    .lbl-row-bot {
+      display: flex;
+      justify-content: center;
+      gap: 2px;
+      font-size: 7.5px;
+      font-weight: 700;
+      height: 9px;
+      line-height: 1;
+      margin-top: 1px;
+      white-space: nowrap;
+    }
+
+    .c-shift { color: var(--c-shift); }
+    .c-alpha { color: var(--c-alpha); }
+    .c-base  { color: var(--c-base); }
+    .c-cmplx { color: var(--c-cmplx); }
+    .c-sd    { color: var(--c-sd); }
+
+    .kbtn {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,0.08);
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-family: inherit;
+      transition: opacity 0.08s ease, transform 0.05s ease;
+    }
+
+    .kbtn:hover { opacity: 0.9; }
+    .kbtn:active { transform: translateY(1px); }
+
+    .btn-pill {
+      width: 40px;
+      height: 22px;
+      border-radius: 6px;
+      background-color: var(--key-top-bg);
+      color: var(--key-top-text);
+      font-size: 10px;
+    }
+
+    .btn-prog {
+      height: 24px;
+      border-radius: 5px;
+      background-color: var(--key-prog-bg);
+      color: var(--key-prog-text);
+      font-size: 10.5px;
+      font-weight: 700;
+    }
+
+    .btn-sc {
+      height: 24px;
+      border-radius: 5px;
+      background-color: var(--key-fn-bg);
+      color: var(--key-fn-text);
+      font-size: 11px;
+    }
+
+    .btn-num {
+      height: 32px;
+      border-radius: 6px;
+      background-color: var(--key-num-bg);
+      color: var(--key-num-text);
+      font-size: 14.5px;
+      font-weight: 700;
+    }
+
+    .btn-del-ac {
+      height: 32px;
+      border-radius: 6px;
+      background-color: var(--key-ac-bg);
+      color: var(--key-ac-text);
+      font-size: 12.5px;
+      font-weight: 800;
+    }
+
+    /* 極簡方向鍵盤 */
+    .replay-oval {
+      width: 82px;
+      height: 58px;
+      border-radius: 14px;
+      background-color: var(--bg-calc-inner);
+      border: 1px solid var(--border-color);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .replay-txt {
+      font-size: 7.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+      letter-spacing: 0.6px;
+      pointer-events: none;
+    }
+
+    .dir-k {
+      position: absolute;
+      background: transparent;
+      border: none;
+      color: var(--text-main);
+      font-size: 9px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .dir-k:hover { opacity: 1; }
+    .k-up    { top: 2px; left: 24px; width: 34px; height: 16px; }
+    .k-down  { bottom: 2px; left: 24px; width: 34px; height: 16px; }
+    .k-left  { left: 2px; top: 15px; width: 20px; height: 28px; }
+    .k-right { right: 2px; top: 15px; width: 20px; height: 28px; }
+
+    .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
+    .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+
+    /* 右側極簡 DSE 實戰工作台：鎖定總高度與左側計數機等高 */
+    .side-panel {
+      flex: 1;
+      width: 100%;
+      max-width: 580px;
+      height: 640px;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 18px 20px 22px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      margin-bottom: 10px;
+      border-bottom: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .hdr-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .action-btn {
+      background-color: var(--chip-bg);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background-color: var(--surface-hover);
+    }
+
+    /* 模式與工作台導航列 */
+    .bar-group {
+      display: flex;
+      gap: 4px;
+      background-color: var(--chip-bg);
+      padding: 3px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 6px 4px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .tab-btn.active {
+      background-color: var(--text-main);
+      color: var(--bg-panel);
+    }
+
+    .ws-section {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .ws-section.active {
+      display: flex;
+    }
+
+    .card-block {
+      background-color: var(--chip-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+
+    .card-block.flex-grow-card {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+      min-height: 0;
+    }
+
+    .sec-title {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .pill-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .pill-btn {
+      background-color: var(--bg-panel);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 4px 9px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--text-main);
+      background-color: var(--surface-hover);
+    }
+
+    .pill-btn.active-sub {
+      background-color: var(--text-main);
+      color: var(--bg-panel);
+      border-color: var(--text-main);
+    }
+
+    .mem-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+    }
+
+    .mem-chip {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 4px 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .mem-chip:hover { border-color: var(--text-main); }
+    .mem-chip b { color: var(--c-alpha); flex-shrink: 0; }
+    .mem-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+    /* 計算歷史紀錄：固定帶捲軸 (Scrollbar) 區塊 */
+    .tape-list {
+      flex: 1;
+      overflow-y: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11.5px;
+      min-height: 80px;
+      max-height: 140px;
+      padding-right: 2px;
+    }
+
+    .tape-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 6px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+    }
+
+    .tape-item:last-child { border-bottom: none; }
+    .tape-item:hover { background-color: var(--surface-hover); }
+
+    /* 程式編輯器與速查清單 */
+    .code-area {
+      flex: 1;
+      width: 100%;
+      min-height: 120px;
+      background-color: var(--bg-panel);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      resize: none;
+      margin-top: 6px;
+    }
+
+    .ref-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      align-content: start;
+      gap: 6px;
+      overflow-y: auto;
+      max-height: 380px;
+      padding-right: 4px;
+    }
+
+    .ref-item {
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 6px 8px;
+      font-size: 11px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ref-item:hover { border-color: var(--text-main); }
+    .ref-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-weight: 800;
+      color: var(--c-shift);
+      margin-right: 4px;
+    }
+
+    .const-val-tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--c-base);
+      white-space: nowrap;
+    }
+
+    .kbd-tag {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      background-color: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 10.5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- 左側：極簡主義 CASIO fx-50FH II -->
+    <div class="calc-case">
+      <div>
+        <div class="top-header">
+          <div class="brand-group">
+            <span class="brand-title">CASIO</span>
+            <span class="model-name">fx-50FH II</span>
+          </div>
+          <div class="solar-cell" title="TWO WAY POWER"></div>
+        </div>
+
+        <div class="hkeaa-bar">
+          <span class="hkeaa-tag">H.K.E.A.A. APPROVED</span>
+          <span>SUPER-FX PLUS</span>
+        </div>
+
+        <!-- LCD 顯示屏 -->
+        <div class="lcd-screen">
+          <div class="lcd-badges">
+            <div class="badge-sub">
+              <span id="ind-S" class="ind">S</span>
+              <span id="ind-A" class="ind">A</span>
+              <span id="ind-M" class="ind">M</span>
+              <span id="ind-STO" class="ind">STO</span>
+              <span id="ind-RCL" class="ind">RCL</span>
+              <span id="ind-HYP" class="ind">HYP</span>
+              <span id="ind-CMPLX" class="ind">CMPLX</span>
+              <span id="ind-SD" class="ind">SD</span>
+              <span id="ind-BASE" class="ind">BASE</span>
+            </div>
+            <div class="badge-sub">
+              <span id="ind-INS" class="ind">INS</span>
+              <span id="ind-D" class="ind on">D</span>
+              <span id="ind-R" class="ind">R</span>
+              <span id="ind-G" class="ind">G</span>
+              <span id="ind-BASE-TYPE" class="ind" style="opacity:0">d</span>
+              <span id="ind-DISP" class="ind">▲</span>
+              <span id="ind-REIM" class="ind">Re⇔Im</span>
+            </div>
+          </div>
+          <div class="lcd-input" id="lcdUpper"><span class="cursor-blink">_</span></div>
+          <div class="lcd-result">
+            <span id="lcdPrompt" class="prompt-lbl"></span>
+            <span id="lcdLower" class="ans-str">0.</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <!-- 頂部控制鍵群 -->
+        <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; align-items: center; margin-bottom: 6px;">
+          <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; justify-content: space-around;">
+              <div class="key-unit">
+                <div class="lbl-row-top"><span class="c-shift">SHIFT</span></div>
+                <button class="kbtn btn-pill" onclick="pressShift()"></button>
+              </div>
+              <div class="key-unit">
+                <div class="lbl-row-top"><span class="c-alpha">ALPHA</span></div>
+                <button class="kbtn btn-pill" onclick="pressAlpha()"></button>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+              <div class="key-unit">
+                <div class="lbl-row-top"><span class="c-shift">EXIT</span></div>
+                <button class="kbtn btn-prog" onclick="pressProg()">Prog</button>
+              </div>
+              <div class="key-unit">
+                <div class="lbl-row-top"></div>
+                <button class="kbtn btn-prog" onclick="pressFmla()">FMLA</button>
+              </div>
+            </div>
+          </div>
+
+          <div style="grid-column: span 2; display: flex; justify-content: center;">
+            <div class="replay-oval">
+              <span class="replay-txt">REPLAY</span>
+              <button class="dir-k k-up" onclick="arrowMove('UP')">▲</button>
+              <button class="dir-k k-down" onclick="arrowMove('DOWN')">▼</button>
+              <button class="dir-k k-left" onclick="arrowMove('LEFT')">◀</button>
+              <button class="dir-k k-right" onclick="arrowMove('RIGHT')">▶</button>
+            </div>
+          </div>
+
+          <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 5px;">
+            <div style="display: flex; justify-content: space-around;">
+              <div class="key-unit">
+                <div class="lbl-row-top"><span class="c-shift">CLR</span><span>MODE</span></div>
+                <button class="kbtn btn-pill" onclick="pressMode()"></button>
+              </div>
+              <div class="key-unit">
+                <div class="lbl-row-top"><span>ON</span></div>
+                <button class="kbtn btn-pill" onclick="pressOn()"></button>
+              </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
+              <div class="key-unit">
+                <div class="lbl-row-top"><span class="c-shift">x!</span><span class="c-base">LOGIC</span></div>
+                <button class="kbtn btn-sc" onclick="key('INV')">x⁻¹</button>
+              </div>
+              <div class="key-unit">
+                <div class="lbl-row-top"><span class="c-shift">³√</span></div>
+                <button class="kbtn btn-sc" onclick="key('CUBE')">x³</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 科學函數鍵區 (6x3) -->
+        <div class="grid-6" style="margin-bottom: 6px;">
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">d/c</span></div>
+            <button class="kbtn btn-sc" onclick="pressFracKey()">a b/c</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"></div>
+            <button class="kbtn btn-sc" onclick="key('SQRT')">√</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-base">DEC</span></div>
+            <button class="kbtn btn-sc" onclick="key('SQ')">x²</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">ˣ√</span><span class="c-base">HEX</span></div>
+            <button class="kbtn btn-sc" onclick="key('POW')">^</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">10ˣ</span><span class="c-base">BIN</span></div>
+            <button class="kbtn btn-sc" onclick="key('LOG')">log</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">eˣ</span><span class="c-base">OCT</span><span class="c-alpha">e</span></div>
+            <button class="kbtn btn-sc" onclick="key('LN')">ln</button>
+          </div>
+
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-cmplx">∠</span><span class="c-alpha">A</span></div>
+            <button class="kbtn btn-sc" onclick="key('NEG', 'A')">(−)</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">←</span><span class="c-alpha">B</span></div>
+            <button class="kbtn btn-sc" onclick="key('DMS', 'B')">° ’ ”</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-alpha">C</span></div>
+            <button class="kbtn btn-sc" onclick="key('HYP', 'C')">hyp</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">sin⁻¹</span><span class="c-alpha">D</span></div>
+            <button class="kbtn btn-sc" onclick="key('SIN', 'D')">sin</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">cos⁻¹</span><span class="c-alpha">E</span></div>
+            <button class="kbtn btn-sc" onclick="key('COS', 'E')">cos</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">tan⁻¹</span><span class="c-alpha">F</span></div>
+            <button class="kbtn btn-sc" onclick="key('TAN', 'F')">tan</button>
+          </div>
+
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">STO</span></div>
+            <button class="kbtn btn-sc" onclick="pressRclSto()">RCL</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">←</span><span class="c-cmplx">i</span></div>
+            <button class="kbtn btn-sc" onclick="key('ENG')">ENG</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">%</span></div>
+            <button class="kbtn btn-sc" onclick="key('LPAREN')">(</button>
+            <div class="lbl-row-bot"><span class="c-cmplx">arg</span></div>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">Abs</span><span class="c-alpha">X</span></div>
+            <button class="kbtn btn-sc" onclick="key('RPAREN', 'X')">)</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">;</span><span class="c-alpha">Y</span></div>
+            <button class="kbtn btn-sc" onclick="key('COMMA', 'Y')">,</button>
+            <div class="lbl-row-bot"><span class="c-cmplx">Conjg</span></div>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">M-</span><span class="c-alpha">M</span></div>
+            <button class="kbtn btn-sc" onclick="key('MPLUS', 'M')">M+</button>
+            <div class="lbl-row-bot"><span class="c-sd">DT</span></div>
+          </div>
+        </div>
+
+        <!-- 主數字鍵區 (5x4) -->
+        <div class="grid-5">
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">CONST</span></div>
+            <button class="kbtn btn-num" onclick="key('7')">7</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">CONV</span></div>
+            <button class="kbtn btn-num" onclick="key('8')">8</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">CLR</span></div>
+            <button class="kbtn btn-num" onclick="key('9')">9</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">INS</span></div>
+            <button class="kbtn btn-del-ac" onclick="pressDel()">DEL</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">OFF</span></div>
+            <button class="kbtn btn-del-ac" onclick="pressAc()">AC</button>
+          </div>
+
+          <div class="key-unit">
+            <div class="lbl-row-top"></div>
+            <button class="kbtn btn-num" onclick="key('4')">4</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"></div>
+            <button class="kbtn btn-num" onclick="key('5')">5</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"></div>
+            <button class="kbtn btn-num" onclick="key('6')">6</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">nPr</span></div>
+            <button class="kbtn btn-num" onclick="key('MUL')">×</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">nCr</span></div>
+            <button class="kbtn btn-num" onclick="key('DIV')">÷</button>
+          </div>
+
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">S-SUM</span></div>
+            <button class="kbtn btn-num" onclick="key('1')">1</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">S-VAR</span></div>
+            <button class="kbtn btn-num" onclick="key('2')">2</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">P-CMD</span></div>
+            <button class="kbtn btn-num" onclick="key('3')">3</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-cmplx">►r∠θ</span><span class="c-shift">Pol(</span></div>
+            <button class="kbtn btn-num" onclick="key('ADD')">+</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-cmplx">►a+bi</span><span class="c-shift">Rec(</span></div>
+            <button class="kbtn btn-num" onclick="key('SUB')">−</button>
+          </div>
+
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">Rnd</span></div>
+            <button class="kbtn btn-num" onclick="key('0')">0</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">Ran#</span></div>
+            <button class="kbtn btn-num" onclick="key('DOT')">·</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">π</span></div>
+            <button class="kbtn btn-num" onclick="key('EXP')">EXP</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-shift">DRG►</span></div>
+            <button class="kbtn btn-num" onclick="key('ANS')">Ans</button>
+          </div>
+          <div class="key-unit">
+            <div class="lbl-row-top"><span class="c-cmplx">Re⇔Im</span></div>
+            <button class="kbtn btn-num" onclick="pressExe()">EXE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側：極簡分頁式 DSE 實戰工作台 (與左側完美等高對齊) -->
+    <div class="side-panel">
+      <div class="panel-hdr">
+        <div>
+          <h2 style="font-size: 15px; font-weight: 800; letter-spacing: -0.2px;">fx-50FH II DSE Workbench</h2>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">23 FMLA · 40 CONST · 40 CONV · Casio Basic 直譯器</div>
+        </div>
+        <div class="hdr-actions">
+          <button class="action-btn" onclick="toggleTheme()" id="themeBtn">☾ 深色</button>
+          <button class="action-btn" onclick="downloadCode()">⬇ 下載 HTML</button>
+        </div>
+      </div>
+
+      <!-- 計算機模式切換列 -->
+      <div class="bar-group">
+        <button id="tab-COMP" class="tab-btn active" onclick="switchMode('COMP')">1: COMP</button>
+        <button id="tab-CMPLX" class="tab-btn" onclick="switchMode('CMPLX')">2: CMPLX</button>
+        <button id="tab-SD" class="tab-btn" onclick="switchMode('SD')">3: SD</button>
+        <button id="tab-BASE" class="tab-btn" onclick="switchMode('BASE')">4: BASE</button>
+      </div>
+
+      <!-- 工作台分頁切換列 -->
+      <div class="bar-group">
+        <button id="ws-tab-main" class="tab-btn active" onclick="switchWorkspace('main')">變數與算式紀錄</button>
+        <button id="ws-tab-prog" class="tab-btn" onclick="switchWorkspace('prog')">Program 與自訂代碼</button>
+        <button id="ws-tab-ref" class="tab-btn" onclick="switchWorkspace('ref')">FMLA / CONST / CONV</button>
+      </div>
+
+      <!-- 分頁 1：變數、算式歷史紀錄與動態狀態卡 -->
+      <div id="ws-main" class="ws-section active">
+        <!-- 分數格式快速切換卡 (BASE 模式下自動隱藏) -->
+        <div id="fracCardBlock" class="card-block" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
+          <span style="font-size: 11px; font-weight: 800; color: var(--text-muted);">分數格式 (真/帶 ⇔ 假)</span>
+          <div style="display: flex; gap: 4px;">
+            <button id="btn-frac-mixed" class="pill-btn active-sub" onclick="setFractionPreference(1)">帶分數 a b/c</button>
+            <button id="btn-frac-improper" class="pill-btn" onclick="setFractionPreference(2)">假分數 d/c</button>
+            <button id="btn-frac-dec" class="pill-btn" onclick="setFractionPreference(0)">小數 Dec</button>
+          </div>
+        </div>
+
+        <!-- CMPLX 專屬：雙顯示模式切換卡 -->
+        <div id="cmplxInfoBox" class="card-block" style="display: none; padding: 6px 10px;">
+          <div class="sec-title" style="margin-bottom: 4px;">
+            <span>CMPLX 複數顯示模式</span>
+            <span style="font-size: 10px; font-weight: 600;">SHIFT+EXE 切換 Re⇔Im</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+            <button id="cmplx-mode-default" class="pill-btn active-sub" onclick="setCmplxDisplayStyle('DEFAULT')">
+              1. 真機預設 (按 SHIFT+EXE 睇虛部)
+            </button>
+            <button id="cmplx-mode-both" class="pill-btn" onclick="setCmplxDisplayStyle('BOTH')">
+              2. 同屏直出 (同時顯示 a+bi)
+            </button>
+          </div>
+        </div>
+
+        <!-- BASE / SD 動態狀態卡 -->
+        <div id="baseInfoBox" class="card-block" style="display: none; padding: 6px 10px;">
+          <div class="sec-title"><span>BASE-N 四進制即時對照</span></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-family: monospace; font-size: 12px;">
+            <div>DEC: <b id="bDec">0</b></div>
+            <div>HEX: <b id="bHex">0</b></div>
+            <div>BIN: <b id="bBin">0</b></div>
+            <div>OCT: <b id="bOct">0</b></div>
+          </div>
+        </div>
+
+        <div id="sdInfoBox" class="card-block" style="display: none; padding: 6px 10px;">
+          <div class="sec-title">
+            <span>SD 統計數據庫 (按 M+ 輸入)</span>
+            <button class="pill-btn" onclick="loadSampleSD()">載入樣本 (10,20,30)</button>
+          </div>
+          <div id="sdSummary" style="font-family: monospace; font-size: 11.5px;">n=0 | x̄=0 | σx=0 | sx=0</div>
+        </div>
+
+        <div class="card-block">
+          <div class="sec-title">
+            <span>記憶變數暫存器 (點擊插入 / STO 存入)</span>
+            <button class="pill-btn" onclick="clearAllMem()">Mcl 清空</button>
+          </div>
+          <div class="mem-grid" id="memGrid"></div>
+        </div>
+
+        <div class="card-block flex-grow-card" style="margin-bottom: 6px;">
+          <div class="sec-title">
+            <span>計算步驟歷史 (Audit Tape — 點擊回載算式)</span>
+            <button class="pill-btn" onclick="clearTape()">清除紀錄</button>
+          </div>
+          <div class="tape-list" id="tapeList">
+            <div style="color: var(--text-muted); padding: 4px;">尚無計算紀錄。輸入算式並按 EXE。</div>
+          </div>
+        </div>
+
+        <div class="card-block" style="margin-bottom: 0; padding: 6px 10px;">
+          <div class="sec-title" style="margin-bottom: 4px;"><span>真機核心特性一鍵測試</span></div>
+          <div class="pill-wrap">
+            <button class="pill-btn" onclick="demoFuncParen()">sin(30)+log(100) (=2.5)</button>
+            <button class="pill-btn" onclick="demoMultiStmt()">多重語句 2+3 : 4×5◢</button>
+            <button class="pill-btn" onclick="demoEngShift()">12345 測試 ENG 移位</button>
+            <button class="pill-btn" onclick="demoConstG()">CONST 35 (g=9.80665)</button>
+            <button class="pill-btn" onclick="demoConvInCm()">10 in►cm (=25.4)</button>
+            <button class="pill-btn" onclick="demoComplexDiv()">(2+3i)÷(1-i)</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分頁 2：DSE Program 庫與 Casio Basic 直譯編輯器 -->
+      <div id="ws-prog" class="ws-section">
+        <div class="card-block">
+          <div class="sec-title"><span>內建 DSE Core / M1 / M2 程式 (點擊執行並查看輸入說明)</span></div>
+          <div class="pill-wrap" style="margin-bottom: 8px;">
+            <button class="pill-btn" onclick="runProgDirect('1')">P1: 二次方程+頂點</button>
+            <button class="pill-btn" onclick="runProgDirect('2')">P2: 二元聯立方程</button>
+            <button class="pill-btn" onclick="runProgDirect('3')">P3: 解三角形 SAS</button>
+            <button class="pill-btn" onclick="runProgDirect('4')">P4: 圓心及半徑</button>
+            <button class="pill-btn" onclick="runProgDirect('5')">P5: 梯形法則(M1)</button>
+            <button class="pill-btn" onclick="runProgDirect('6')">P6: 常態分佈 Φ(z)</button>
+            <button class="pill-btn" onclick="runProgDirect('7')">P7: 二項分佈 P(X=k)</button>
+            <button class="pill-btn" onclick="runProgDirect('8')">P8: 3x3 行列式(M2)</button>
+            <button class="pill-btn" onclick="runProgDirect('9')">P9: 3D 向量叉積(M2)</button>
+            <button class="pill-btn" onclick="runProgDirect('0')">P0: 三次方程(M2)</button>
+          </div>
+          <div id="progDocBox" style="font-size: 11px; color: var(--text-muted); padding-top: 4px; border-top: 1px solid var(--border-color);">
+            提示：點擊上方 P1–P0 或按機身 <span class="kbd-tag">Prog</span> + <span class="kbd-tag">1</span>–<span class="kbd-tag">0</span> 即可啟動。
+          </div>
+        </div>
+
+        <div class="card-block flex-grow-card">
+          <div class="sec-title">
+            <span>自訂 Casio Basic 編程直譯器 (支援 ?→A , : , ◢ , ⇒ , Goto/Lbl)</span>
+            <div style="display:flex; gap:4px;">
+              <select id="progSlotSelect" class="pill-btn" onchange="loadSlotToEditor()">
+                <option value="1">Slot P1</option>
+                <option value="2">Slot P2</option>
+                <option value="3">Slot P3</option>
+                <option value="4">Slot P4</option>
+              </select>
+              <button class="pill-btn" onclick="saveCustomProg()">儲存並執行</button>
+            </div>
+          </div>
+          <div class="pill-wrap" style="margin-bottom: 4px;">
+            <button class="pill-btn" onclick="insertBasicToken('?→')">?→ 輸入</button>
+            <button class="pill-btn" onclick="insertBasicToken('→')">→ 賦值</button>
+            <button class="pill-btn" onclick="insertBasicToken(':')">: 分隔</button>
+            <button class="pill-btn" onclick="insertBasicToken('◢')">◢ 暫停顯示</button>
+            <button class="pill-btn" onclick="insertBasicToken('⇒')">⇒ 條件跳躍</button>
+            <button class="pill-btn" onclick="insertBasicToken('Lbl ')">Lbl</button>
+            <button class="pill-btn" onclick="insertBasicToken('Goto ')">Goto</button>
+          </div>
+          <textarea id="basicEditor" class="code-area" placeholder="範例：?→A : ?→B : A+B→C : C◢ : A×B"></textarea>
+        </div>
+      </div>
+
+      <!-- 分頁 3：23 FMLA / 40 CONST / 40 CONV 速查表 -->
+      <div id="ws-ref" class="ws-section">
+        <div class="card-block flex-grow-card" style="margin-bottom: 0;">
+          <div class="sec-title">
+            <span>內建速查庫 (01–40 順序排列，點擊直接輸入計數機)</span>
+            <div style="display:flex; gap:4px;">
+              <button class="pill-btn" id="ref-btn-fmla" onclick="renderRefList('FMLA')">23 FMLA 公式</button>
+              <button class="pill-btn" id="ref-btn-const" onclick="renderRefList('CONST')">40 CONST 常數</button>
+              <button class="pill-btn" id="ref-btn-conv" onclick="renderRefList('CONV')">40 CONV 轉換</button>
+            </div>
+          </div>
+          <div class="ref-grid" id="refGrid"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // 1. 複數與精確數學核心類別 (Complex & Exact Math)
+    // =========================================================================
+    class Complex {
+      constructor(re = 0, im = 0) {
+        this.re = Number(re) || 0;
+        this.im = Number(im) || 0;
+      }
+      static fromPolar(r, thetaRad) {
+        return new Complex(r * Math.cos(thetaRad), r * Math.sin(thetaRad));
+      }
+      add(o) { return new Complex(this.re + o.re, this.im + o.im); }
+      sub(o) { return new Complex(this.re - o.re, this.im - o.im); }
+      mul(o) {
+        return new Complex(
+          this.re * o.re - this.im * o.im,
+          this.re * o.im + this.im * o.re
+        );
+      }
+      div(o) {
+        const d = o.re * o.re + o.im * o.im;
+        if (d === 0) throw new Error('Math ERROR');
+        return new Complex(
+          (this.re * o.re + this.im * o.im) / d,
+          (this.im * o.re - this.re * o.im) / d
+        );
+      }
+      pow(expComplex) {
+        const n = expComplex.re;
+        if (Math.abs(expComplex.im) < 1e-12 && Number.isInteger(n)) {
+          if (n === 0) return new Complex(1, 0);
+          if (n > 0 && n <= 12) {
+            let res = new Complex(1, 0);
+            for (let k = 0; k < n; k++) res = res.mul(this);
+            return res;
+          }
+          if (n === -1) return new Complex(1, 0).div(this);
+        }
+        const r = Math.pow(this.abs(), n);
+        const th = this.arg() * n;
+        return new Complex(r * Math.cos(th), r * Math.sin(th));
+      }
+      abs() { return Math.hypot(this.re, this.im); }
+      arg() { return Math.atan2(this.im, this.re); }
+      conj() { return new Complex(this.re, -this.im); }
+    }
+
+    // =========================================================================
+    // 2. 真機 40 個科學常數 (CONST 01 - 40, CODATA 標準)
+    // =========================================================================
+    const CONST_DATA = {
+      '01': { sym: 'mp', name: '質子質量', val: 1.672621777e-27 },
+      '02': { sym: 'mn', name: '中子質量', val: 1.674927351e-27 },
+      '03': { sym: 'me', name: '電子質量', val: 9.10938291e-31 },
+      '04': { sym: 'mμ', name: '緲子質量', val: 1.883531475e-28 },
+      '05': { sym: 'a0', name: '波耳半徑', val: 5.291772109e-11 },
+      '06': { sym: 'h', name: '普朗克常數', val: 6.62606957e-34 },
+      '07': { sym: 'μN', name: '核磁子', val: 5.05078353e-27 },
+      '08': { sym: 'μB', name: '波耳磁子', val: 9.27400968e-24 },
+      '09': { sym: 'ħ', name: '約化普朗克常數', val: 1.054571726e-34 },
+      '10': { sym: 'α', name: '精細結構常數', val: 7.297352569e-3 },
+      '11': { sym: 're', name: '古典電子半徑', val: 2.817940326e-15 },
+      '12': { sym: 'λc', name: '康普頓波長', val: 2.426310238e-12 },
+      '13': { sym: 'γp', name: '質子旋磁比', val: 267522200.5 },
+      '14': { sym: 'λcp', name: '質子康普頓波長', val: 1.321409856e-15 },
+      '15': { sym: 'λcn', name: '中子康普頓波長', val: 1.319590906e-15 },
+      '16': { sym: 'R∞', name: '里德伯常數', val: 10973731.57 },
+      '17': { sym: 'u', name: '原子質量單位', val: 1.660538921e-27 },
+      '18': { sym: 'μp', name: '質子磁矩', val: 1.410606743e-26 },
+      '19': { sym: 'μe', name: '電子磁矩', val: -9.28476430e-24 },
+      '20': { sym: 'μn', name: '中子磁矩', val: -9.6623647e-27 },
+      '21': { sym: 'μμ', name: '緲子磁矩', val: -4.49044807e-26 },
+      '22': { sym: 'F', name: '法拉第常數', val: 96485.3365 },
+      '23': { sym: 'e', name: '基本電荷', val: 1.602176565e-19 },
+      '24': { sym: 'NA', name: '亞佛加厥常數', val: 6.02214129e23 },
+      '25': { sym: 'k', name: '波茲曼常數', val: 1.3806488e-23 },
+      '26': { sym: 'Vm', name: '理想氣體摩爾體積', val: 0.022413968 },
+      '27': { sym: 'R', name: '摩爾氣體常數', val: 8.3144621 },
+      '28': { sym: 'c', name: '真空光速', val: 299792458 },
+      '29': { sym: 'C1', name: '第一輻射常數', val: 3.74177153e-16 },
+      '30': { sym: 'C2', name: '第二輻射常數', val: 0.01438777 },
+      '31': { sym: 'σ', name: '史蒂芬-波茲曼常數', val: 5.670373e-8 },
+      '32': { sym: 'ε0', name: '真空電容率', val: 8.854187817e-12 },
+      '33': { sym: 'μ0', name: '真空磁導率', val: 1.256637061e-6 },
+      '34': { sym: 'Φ0', name: '磁通量量子', val: 2.067833758e-15 },
+      '35': { sym: 'g', name: '標準重力加速度', val: 9.80665 },
+      '36': { sym: 'G0', name: '電導量子', val: 7.748091734e-5 },
+      '37': { sym: 'Z0', name: '真空特性阻抗', val: 376.7303135 },
+      '38': { sym: 't', name: '攝氏溫度零點(K)', val: 273.15 },
+      '39': { sym: 'G', name: '萬有引力常數', val: 6.67384e-11 },
+      '40': { sym: 'atm', name: '標準大氣壓(Pa)', val: 101325 }
+    };
+
+    // =========================================================================
+    // 3. 真機 40 組單位轉換 (CONV 01 - 40)
+    // =========================================================================
+    const CONV_DATA = {
+      '01': { lbl: 'in►cm', fn: x => x * 2.54 },
+      '02': { lbl: 'cm►in', fn: x => x / 2.54 },
+      '03': { lbl: 'ft►m', fn: x => x * 0.3048 },
+      '04': { lbl: 'm►ft', fn: x => x / 0.3048 },
+      '05': { lbl: 'yd►m', fn: x => x * 0.9144 },
+      '06': { lbl: 'm►yd', fn: x => x / 0.9144 },
+      '07': { lbl: 'mile►km', fn: x => x * 1.609344 },
+      '08': { lbl: 'km►mile', fn: x => x / 1.609344 },
+      '09': { lbl: 'n mile►m', fn: x => x * 1852 },
+      '10': { lbl: 'm►n mile', fn: x => x / 1852 },
+      '11': { lbl: 'pc►km', fn: x => x * 3.08567758e13 },
+      '12': { lbl: 'km►pc', fn: x => x / 3.08567758e13 },
+      '13': { lbl: 'acre►m²', fn: x => x * 4046.856422 },
+      '14': { lbl: 'm²►acre', fn: x => x / 4046.856422 },
+      '15': { lbl: 'gal(US)►L', fn: x => x * 3.785411784 },
+      '16': { lbl: 'L►gal(US)', fn: x => x / 3.785411784 },
+      '17': { lbl: 'gal(UK)►L', fn: x => x * 4.54609 },
+      '18': { lbl: 'L►gal(UK)', fn: x => x / 4.54609 },
+      '19': { lbl: 'km/h►m/s', fn: x => x / 3.6 },
+      '20': { lbl: 'm/s►km/h', fn: x => x * 3.6 },
+      '21': { lbl: 'oz►g', fn: x => x * 28.34952313 },
+      '22': { lbl: 'g►oz', fn: x => x / 28.34952313 },
+      '23': { lbl: 'lb►kg', fn: x => x * 0.45359237 },
+      '24': { lbl: 'kg►lb', fn: x => x / 0.45359237 },
+      '25': { lbl: 'atm►Pa', fn: x => x * 101325 },
+      '26': { lbl: 'Pa►atm', fn: x => x / 101325 },
+      '27': { lbl: 'mmHg►Pa', fn: x => x * 133.3223874 },
+      '28': { lbl: 'Pa►mmHg', fn: x => x / 133.3223874 },
+      '29': { lbl: 'hp►kW', fn: x => x * 0.745699872 },
+      '30': { lbl: 'kW►hp', fn: x => x / 0.745699872 },
+      '31': { lbl: 'kgf/cm²►Pa', fn: x => x * 98066.5 },
+      '32': { lbl: 'Pa►kgf/cm²', fn: x => x / 98066.5 },
+      '33': { lbl: 'kgf·m►J', fn: x => x * 9.80665 },
+      '34': { lbl: 'J►kgf·m', fn: x => x / 9.80665 },
+      '35': { lbl: 'lbf/in²►kPa', fn: x => x * 6.894757293 },
+      '36': { lbl: 'kPa►lbf/in²', fn: x => x / 6.894757293 },
+      '37': { lbl: '°F►°C', fn: x => (x - 32) * 5 / 9 },
+      '38': { lbl: '°C►°F', fn: x => x * 9 / 5 + 32 },
+      '39': { lbl: 'J►cal', fn: x => x / 4.1858 },
+      '40': { lbl: 'cal►J', fn: x => x * 4.1858 }
+    };
+
+    // =========================================================================
+    // 4. 真機完整 23 條內建公式 (FMLA 01 - 23)
+    // =========================================================================
+    const BUILTIN_FMLA = {
+      '01': { name: '01:Quadratic', desc: 'ax²+bx+c=0', vars: ['a', 'b', 'c'], execute: ({ a, b, c }) => {
+        const d = b * b - 4 * a * c;
+        if (a === 0 || d < 0) return [{ label: 'Err=', val: 'Math ERROR' }];
+        return [{ label: 'x1=', val: (-b + Math.sqrt(d)) / (2 * a) }, { label: 'x2=', val: (-b - Math.sqrt(d)) / (2 * a) }];
+      }},
+      '02': { name: '02:Cosine Law', desc: '求第三邊 c', vars: ['a', 'b', 'C'], execute: ({ a, b, C }) => [
+        { label: 'c=', val: Math.sqrt(a * a + b * b - 2 * a * b * Math.cos(degToRad(C))) }
+      ]},
+      '03': { name: '03:Heron Area', desc: '海倫公式求面積', vars: ['a', 'b', 'c'], execute: ({ a, b, c }) => {
+        const s = (a + b + c) / 2;
+        if (s <= a || s <= b || s <= c) return [{ label: 'Err=', val: 'Math ERROR' }];
+        return [{ label: 'S=', val: Math.sqrt(s * (s - a) * (s - b) * (s - c)) }];
+      }},
+      '04': { name: '04:Tri Area', desc: '兩邊夾角求面積', vars: ['a', 'b', 'C'], execute: ({ a, b, C }) => [
+        { label: 'S=', val: 0.5 * a * b * Math.sin(degToRad(C)) }
+      ]},
+      '05': { name: '05:Sector', desc: '扇形弧長 L 與面積 S', vars: ['r', 'θ'], execute: ({ r, θ }) => [
+        { label: 'L=', val: r * (θ * Math.PI / 180) },
+        { label: 'S=', val: 0.5 * r * r * (θ * Math.PI / 180) }
+      ]},
+      '06': { name: '06:Sphere', desc: '球體表面積 S 與體積 V', vars: ['r'], execute: ({ r }) => [
+        { label: 'S=', val: 4 * Math.PI * r * r },
+        { label: 'V=', val: (4 / 3) * Math.PI * Math.pow(r, 3) }
+      ]},
+      '07': { name: '07:Cone', desc: '圓錐側面積 S 與體積 V', vars: ['r', 'h'], execute: ({ r, h }) => [
+        { label: 'S=', val: Math.PI * r * Math.hypot(r, h) },
+        { label: 'V=', val: (1 / 3) * Math.PI * r * r * h }
+      ]},
+      '08': { name: '08:Cylinder', desc: '圓柱總表面積 S 與體積 V', vars: ['r', 'h'], execute: ({ r, h }) => [
+        { label: 'S=', val: 2 * Math.PI * r * (r + h) },
+        { label: 'V=', val: Math.PI * r * r * h }
+      ]},
+      '09': { name: '09:AP Sum', desc: '等差數列第 n 項及總和', vars: ['a', 'd', 'n'], execute: ({ a, d, n }) => [
+        { label: 'Tn=', val: a + (n - 1) * d },
+        { label: 'Sn=', val: (n / 2) * (2 * a + (n - 1) * d) }
+      ]},
+      '10': { name: '10:GP Sum', desc: '等比數列第 n 項及總和', vars: ['a', 'r', 'n'], execute: ({ a, r, n }) => [
+        { label: 'Tn=', val: a * Math.pow(r, n - 1) },
+        { label: 'Sn=', val: r === 1 ? a * n : a * (Math.pow(r, n) - 1) / (r - 1) }
+      ]},
+      '11': { name: '11:Pendulum', desc: '單擺週期 T=2π√(L/g)', vars: ['L'], execute: ({ L }) => [
+        { label: 'T=', val: 2 * Math.PI * Math.sqrt(L / 9.80665) }
+      ]},
+      '12': { name: '12:Spring T', desc: '彈簧振子週期 T=2π√(m/k)', vars: ['m', 'k'], execute: ({ m, k }) => [
+        { label: 'T=', val: 2 * Math.PI * Math.sqrt(m / k) }
+      ]},
+      '13': { name: '13:Projectile', desc: '斜拋最大高度 H 與射程 R', vars: ['v0', 'θ'], execute: ({ v0, θ }) => {
+        const rad = θ * Math.PI / 180;
+        const g = 9.80665;
+        return [
+          { label: 'H=', val: Math.pow(v0 * Math.sin(rad), 2) / (2 * g) },
+          { label: 'R=', val: (v0 * v0 * Math.sin(2 * rad)) / g }
+        ];
+      }},
+      '14': { name: '14:Centripetal', desc: '向心力 F=mv²/r', vars: ['m', 'v', 'r'], execute: ({ m, v, r }) => [
+        { label: 'F=', val: (m * v * v) / r }
+      ]},
+      '15': { name: '15:Gravity', desc: '萬有引力 F=Gm1m2/r²', vars: ['m1', 'm2', 'r'], execute: ({ m1, m2, r }) => [
+        { label: 'F=', val: (6.67384e-11 * m1 * m2) / (r * r) }
+      ]},
+      '16': { name: '16:Kinetic E', desc: '動能 E=½mv²', vars: ['m', 'v'], execute: ({ m, v }) => [
+        { label: 'E=', val: 0.5 * m * v * v }
+      ]},
+      '17': { name: '17:Doppler', desc: '都卜勒效應頻率 f', vars: ['f0', 'v', 'vs', 'vo'], execute: ({ f0, v, vs, vo }) => [
+        { label: 'f=', val: f0 * ((v + vo) / (v - vs)) }
+      ]},
+      '18': { name: '18:Parallel R', desc: '並聯電阻 R=(R1R2)/(R1+R2)', vars: ['R1', 'R2'], execute: ({ R1, R2 }) => [
+        { label: 'R=', val: (R1 * R2) / (R1 + R2) }
+      ]},
+      '19': { name: '19:Coulomb', desc: '庫侖靜電力 F', vars: ['q1', 'q2', 'r'], execute: ({ q1, q2, r }) => [
+        { label: 'F=', val: (q1 * q2) / (4 * Math.PI * 8.854187817e-12 * r * r) }
+      ]},
+      '20': { name: '20:RLC Imped', desc: 'RLC 串聯交流阻抗 Z', vars: ['R', 'L', 'C', 'f'], execute: ({ R, L, C, f }) => {
+        const w = 2 * Math.PI * f;
+        const xl = w * L;
+        const xc = 1 / (w * C);
+        return [{ label: 'Z=', val: Math.hypot(R, xl - xc) }];
+      }},
+      '21': { name: '21:Lens Eq', desc: '薄透鏡成像距離 b', vars: ['a', 'f'], execute: ({ a, f }) => [
+        { label: 'b=', val: (a * f) / (a - f) }
+      ]},
+      '22': { name: '22:dB Level', desc: '分貝增益 10 log(P2/P1)', vars: ['P1', 'P2'], execute: ({ P1, P2 }) => [
+        { label: 'dB=', val: 10 * Math.log10(P2 / P1) }
+      ]},
+      '23': { name: '23:Ideal Gas', desc: '理想氣體狀態方程 PV=nRT', vars: ['n', 'T', 'V'], execute: ({ n, T, V }) => [
+        { label: 'P=', val: (n * 8.3144621 * T) / V }
+      ]}
+    };
+
+    // =========================================================================
+    // 5. DSE 10 大內建程式庫 (支援說明文件與自訂覆寫)
+    // =========================================================================
+    const DSE_PROGRAMS = {
+      '1': {
+        name: 'Prog 1:Quadratic',
+        doc: '輸入 A, B, C 解 Ax²+Bx+C=0。依序輸出：判別式 Δ、根 X1、根 X2、頂點座標 (H, K)。',
+        vars: ['A', 'B', 'C'],
+        execute: ({ A, B, C }) => {
+          if (A === 0) return [{ label: 'X=', val: -C / B }];
+          const d = B * B - 4 * A * C;
+          const h = -B / (2 * A);
+          const k = C - (B * B) / (4 * A);
+          if (d < 0) {
+            const re = cleanNum(h);
+            const im = cleanNum(Math.sqrt(-d) / Math.abs(2 * A));
+            return [
+              { label: 'Δ=', val: d },
+              { label: 'X1=', val: `${re}+${im}i` },
+              { label: 'X2=', val: `${re}-${im}i` },
+              { label: 'Vert H=', val: h },
+              { label: 'Vert K=', val: k }
+            ];
+          }
+          return [
+            { label: 'Δ=', val: d },
+            { label: 'X1=', val: (-B + Math.sqrt(d)) / (2 * A) },
+            { label: 'X2=', val: (-B - Math.sqrt(d)) / (2 * A) },
+            { label: 'Vert H=', val: h },
+            { label: 'Vert K=', val: k }
+          ];
+        }
+      },
+      '2': {
+        name: 'Prog 2:Simul 2x2',
+        doc: '解二元一次聯立方程 Ax+By=C 及 Dx+Ey=F。依序輸入 A, B, C, D, E, F，輸出 X 及 Y。',
+        vars: ['A', 'B', 'C', 'D', 'E', 'F'],
+        execute: ({ A, B, C, D, E, F }) => {
+          const det = A * E - B * D;
+          if (Math.abs(det) < 1e-12) return [{ label: 'Err=', val: 'Math ERROR' }];
+          const x = (C * E - B * F) / det;
+          const y = (A * F - C * D) / det;
+          S.vars.X = cleanNum(x); S.vars.Y = cleanNum(y);
+          return [{ label: 'X=', val: x }, { label: 'Y=', val: y }];
+        }
+      },
+      '3': {
+        name: 'Prog 3:Triangle',
+        doc: 'SAS 解三角形：輸入兩邊 A, B 及夾角 C (度)，輸出對邊 c 及三角形面積 Area。',
+        vars: ['A', 'B', 'C'],
+        execute: ({ A, B, C }) => {
+          const c = Math.sqrt(A * A + B * B - 2 * A * B * Math.cos(degToRad(C)));
+          const area = 0.5 * A * B * Math.sin(degToRad(C));
+          return [{ label: 'Side c=', val: c }, { label: 'Area=', val: area }];
+        }
+      },
+      '4': {
+        name: 'Prog 4:Circle',
+        doc: '圓方程 x²+y²+Dx+Ey+F=0：輸入 D, E, F，輸出圓心 (H, K) 及半徑 r。',
+        vars: ['D', 'E', 'F'],
+        execute: ({ D, E, F }) => {
+          const h = -D / 2, k = -E / 2;
+          const rSq = h * h + k * k - F;
+          return [
+            { label: 'Center H=', val: h },
+            { label: 'Center K=', val: k },
+            { label: 'Radius r=', val: rSq >= 0 ? Math.sqrt(rSq) : 'Math ERROR' }
+          ];
+        }
+      },
+      '5': {
+        name: 'Prog 5:Trapz M1',
+        doc: 'M1 梯形法則積分 ∫1/(1+x²)dx：輸入下限 A、上限 B 及分割數 N，輸出步長 h 及近似值。',
+        vars: ['A', 'B', 'N'],
+        execute: ({ A, B, N }) => {
+          if (N <= 0) return [{ label: 'Err=', val: 'Math ERROR' }];
+          const h = (B - A) / N;
+          const f = x => 1 / (1 + x * x);
+          let sum = f(A) + f(B);
+          for (let i = 1; i < N; i++) sum += 2 * f(A + i * h);
+          return [{ label: 'Step h=', val: h }, { label: 'Area≈', val: (h / 2) * sum }];
+        }
+      },
+      '6': {
+        name: 'Prog 6:Normal M1',
+        doc: 'M1 標準常態分佈：輸入標準分 Z (即 X)，輸出 P(0≤Z≤z) 及累積機率 Φ(z)。',
+        vars: ['X'],
+        execute: ({ X }) => {
+          const z = Math.abs(X);
+          const t = 1.0 / (1.0 + 0.2316419 * z);
+          const poly = t * (0.319381530 + t * (-0.356563782 + t * (1.781477937 + t * (-1.821255978 + t * 1.330274429))));
+          const phiZ = 1.0 - (1.0 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * z * z) * poly;
+          return [
+            { label: 'P(0..z)=', val: cleanNum(phiZ - 0.5) },
+            { label: 'Φ(z)=', val: cleanNum(X >= 0 ? phiZ : 1 - phiZ) }
+          ];
+        }
+      },
+      '7': {
+        name: 'Prog 7:Binom M1',
+        doc: 'M1 二項分佈 X~B(N, P)：輸入試驗次數 M、成功機率 A (代表 p) 及成功次數 X，輸出 P(X=k)。',
+        vars: ['M', 'A', 'X'],
+        execute: ({ M, A, X }) => {
+          const prob = calcComb(M, X) * Math.pow(A, X) * Math.pow(1 - A, M - X);
+          return [{ label: 'P(X=k)=', val: cleanNum(prob) }];
+        }
+      },
+      '8': {
+        name: 'Prog 8:Det3x3 M2',
+        doc: 'M2 3×3 行列式：依序輸入三列元素 A,B,C / D,E,F / X,Y,M，直接輸出 det(A)。',
+        vars: ['A', 'B', 'C', 'D', 'E', 'F', 'X', 'Y', 'M'],
+        execute: ({ A, B, C, D, E, F, X, Y, M }) => {
+          const det = A * (E * M - F * Y) - B * (D * M - F * X) + C * (D * Y - E * X);
+          return [{ label: 'det(A)=', val: cleanNum(det) }];
+        }
+      },
+      '9': {
+        name: 'Prog 9:Vector M2',
+        doc: 'M2 3D 向量：輸入 u=(A,B,C) 及 v=(D,E,F)，輸出點積 u·v、叉積 u×v (i,j,k) 及模長 |u×v|。',
+        vars: ['A', 'B', 'C', 'D', 'E', 'F'],
+        execute: ({ A, B, C, D, E, F }) => {
+          const dot = A * D + B * E + C * F;
+          const cx = B * F - C * E, cy = C * D - A * F, cz = A * E - B * D;
+          return [
+            { label: 'u·v=', val: dot },
+            { label: 'uxv(i)=', val: cx },
+            { label: 'uxv(j)=', val: cy },
+            { label: 'uxv(k)=', val: cz },
+            { label: '|uxv|=', val: Math.hypot(cx, cy, cz) }
+          ];
+        }
+      },
+      '0': {
+        name: 'Prog 0:Cubic M2',
+        doc: 'M2 一元三次方程 Ax³+Bx²+Cx+D=0：輸入 A, B, C, D，輸出實數根 X1, X2, X3。',
+        vars: ['A', 'B', 'C', 'D'],
+        execute: ({ A, B, C, D }) => {
+          if (A === 0) return [{ label: 'Err=', val: 'Math ERROR' }];
+          const b = B / A, c = C / A, d = D / A;
+          const p = c - (b * b) / 3;
+          const q = (2 * b * b * b) / 27 - (b * c) / 3 + d;
+          const disc = (q * q) / 4 + (p * p * p) / 27;
+          if (disc >= 0) {
+            const u = Math.cbrt(-q / 2 + Math.sqrt(disc));
+            const v = Math.cbrt(-q / 2 - Math.sqrt(disc));
+            return [{ label: 'X1=', val: cleanNum(u + v - b / 3) }];
+          }
+          const r = Math.sqrt(-(p * p * p) / 27);
+          const phi = Math.acos(Math.max(-1, Math.min(1, -q / (2 * r))));
+          return [
+            { label: 'X1=', val: cleanNum(2 * Math.cbrt(r) * Math.cos(phi / 3) - b / 3) },
+            { label: 'X2=', val: cleanNum(2 * Math.cbrt(r) * Math.cos((phi + 2 * Math.PI) / 3) - b / 3) },
+            { label: 'X3=', val: cleanNum(2 * Math.cbrt(r) * Math.cos((phi + 4 * Math.PI) / 3) - b / 3) }
+          ];
+        }
+      }
+    };
+
+    const CUSTOM_BASIC_SCRIPTS = {
+      '1': '?→A : ?→B : A+B→C : C◢ : A×B',
+      '2': '',
+      '3': '',
+      '4': ''
+    };
+
+    // =========================================================================
+    // 6. 計算機全域狀態 (State)
+    // =========================================================================
+    const S = {
+      mode: 'COMP',
+      baseType: 'd',
+      angle: 'D',
+      tokens: [],
+      cursor: 0,
+      insMode: false,
+      engExpOffset: null,
+      topOverride: null,
+      resText: '0.',
+      promptText: '',
+      shift: false,
+      alpha: false,
+      hyp: false,
+      stoMode: false,
+      rclMode: false,
+      modeMenuStep: 0,
+      clrMenu: false,
+      activeSubMenu: null,
+      ansVal: 0,
+      rawNum: 0,
+      lastComplex: null,
+      cmplxDisplayStyle: 'DEFAULT',
+      complexView: 1,
+      fracMode: 0,
+      preferredFracStyle: 1,
+      sdList: [],
+      vars: { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, X: 0, Y: 0, M: 0 },
+      isEvaluated: false,
+      interactive: null,
+      currentProg: null,
+      progStep: 0,
+      progInputs: {},
+      progOutputs: [],
+      progOutIdx: 0,
+      basicStmts: [],
+      basicPc: 0,
+      basicWaitingVar: null,
+      basicDispPaused: false,
+      history: [],
+      histIdx: -1,
+      auditTape: []
+    };
+
+    // =========================================================================
+    // 7. 基礎數學與格式化輔助函數
+    // =========================================================================
+    function degToRad(d) {
+      if (S.angle === 'R') return d;
+      if (S.angle === 'G') return (d * Math.PI) / 200;
+      return (d * Math.PI) / 180;
+    }
+    function radToDeg(r) {
+      if (S.angle === 'R') return r;
+      if (S.angle === 'G') return (r * 200) / Math.PI;
+      return (r * 180) / Math.PI;
+    }
+    function cleanNum(n) {
+      if (typeof n !== 'number' || !Number.isFinite(n)) return n;
+      if (Math.abs(n) < 1e-12) return 0;
+      return Number(n.toPrecision(10));
+    }
+    function calcFactorial(n) {
+      if (n < 0 || !Number.isInteger(n) || n > 69) throw new Error('Math ERROR');
+      let r = 1;
+      for (let i = 2; i <= n; i++) r *= i;
+      return r;
+    }
+    function calcPerm(n, r) {
+      if (n < 0 || r < 0 || r > n || !Number.isInteger(n) || !Number.isInteger(r)) throw new Error('Math ERROR');
+      let res = 1;
+      for (let i = 0; i < r; i++) res *= (n - i);
+      return res;
+    }
+    function calcComb(n, r) {
+      if (n < 0 || r < 0 || r > n || !Number.isInteger(n) || !Number.isInteger(r)) throw new Error('Math ERROR');
+      if (r > n - r) r = n - r;
+      let res = 1;
+      for (let i = 1; i <= r; i++) res = (res * (n - i + 1)) / i;
+      return Math.round(res);
+    }
+
+    function getFractionComponents(val) {
+      if (Math.abs(val - Math.round(val)) < 1e-9) {
+        return { sign: val < 0 ? -1 : 1, intPart: Math.abs(Math.round(val)), num: 0, den: 1 };
+      }
+      const sign = val < 0 ? -1 : 1;
+      val = Math.abs(val);
+      const intPart = Math.floor(val);
+      const frac = val - intPart;
+      let h1 = 1, h2 = 0, k1 = 0, k2 = 1, b = frac, iter = 0;
+      do {
+        const a = Math.floor(b);
+        let aux = h1; h1 = a * h1 + h2; h2 = aux;
+        aux = k1; k1 = a * k1 + k2; k2 = aux;
+        if (Math.abs(b - a) < 1e-12) break;
+        b = 1 / (b - a);
+        iter++;
+      } while (Math.abs(frac - h1 / k1) > 1e-7 && k1 < 10000 && iter < 25);
+      if (k1 >= 10000) return null;
+      return { sign, intPart, num: h1, den: k1 };
+    }
+
+    function formatAsFraction(val, fMode) {
+      if (typeof val !== 'number' || !Number.isFinite(val)) return formatNumber(val);
+      if (fMode === 0) return formatNumber(val);
+      const f = getFractionComponents(val);
+      if (!f) return formatNumber(val);
+      if (f.num === 0) return (f.sign === -1 ? '-' : '') + f.intPart + '.';
+      if (fMode === 1) {
+        const prefix = f.intPart === 0 ? '' : `${f.intPart}⌟`;
+        return `${f.sign === -1 ? '-' : ''}${prefix}${f.num}⌟${f.den}`;
+      } else {
+        const improperN = f.intPart * f.den + f.num;
+        return `${f.sign === -1 ? '-' : ''}${improperN}⌟${f.den}`;
+      }
+    }
+
+    function formatNumber(num) {
+      if (typeof num === 'string') return num;
+      if (!Number.isFinite(num) || Number.isNaN(num)) return 'Math ERROR';
+      const c = cleanNum(num);
+      if (c === 0) return '0.';
+      if (Math.abs(c) >= 1e10 || (Math.abs(c) > 0 && Math.abs(c) < 1e-9)) {
+        const parts = c.toExponential(7).split('e');
+        const exp = parseInt(parts[1], 10);
+        const expStr = (exp >= 0 ? '+' : '-') + String(Math.abs(exp)).padStart(2, '0');
+        return `${parseFloat(parts[0])}×10^${expStr}`;
+      }
+      let s = String(c);
+      if (!s.includes('.')) s += '.';
+      return s;
+    }
+
+    function formatConstValueForRef(val) {
+      if (Math.abs(val) >= 1e6 || (Math.abs(val) > 0 && Math.abs(val) < 1e-3)) {
+        const [m, e] = val.toExponential(4).split('e');
+        return `${parseFloat(m)}×10^${parseInt(e, 10)}`;
+      }
+      return String(val);
+    }
+
+    function formatEng(val, stepOffset = 0) {
+      if (!Number.isFinite(val)) return 'Math ERROR';
+      if (val === 0) return '0.×10^00';
+      const baseExp = Math.floor(Math.log10(Math.abs(val)) / 3) * 3;
+      const targetExp = baseExp - stepOffset * 3;
+      const mantissa = cleanNum(val / Math.pow(10, targetExp));
+      const signStr = targetExp >= 0 ? '' : '-';
+      const expPad = String(Math.abs(targetExp)).padStart(2, '0');
+      let mStr = String(mantissa);
+      if (!mStr.includes('.')) mStr += '.';
+      return `${mStr}×10^${signStr}${expPad}`;
+    }
+
+    function formatComplex(c, view = 1, fMode = 0) {
+      if (!c || Number.isNaN(c.re) || Number.isNaN(c.im)) return 'Math ERROR';
+      const re = cleanNum(c.re);
+      const im = cleanNum(c.im);
+
+      if (view === 3) {
+        const r = cleanNum(c.abs());
+        const th = cleanNum(radToDeg(c.arg()));
+        return `${formatAsFraction(r, fMode)}∠${formatAsFraction(th, 0)}`;
+      }
+      if (view === 4) {
+        const th = cleanNum(radToDeg(c.arg()));
+        return `∠${formatAsFraction(th, 0)}`;
+      }
+      if (view === 1) {
+        return formatAsFraction(re, fMode);
+      }
+      if (view === 2) {
+        if (im === 0) return '0i';
+        const imFormatted = formatAsFraction(im, fMode).replace(/\.$/, '');
+        return `${imFormatted}i`;
+      }
+
+      if (Math.abs(im) < 1e-11) return formatAsFraction(re, fMode);
+      const reStr = formatAsFraction(re, fMode).replace(/\.$/, '');
+      const absIm = Math.abs(im);
+      const imPart = (absIm === 1 && fMode === 0) ? 'i' : `${formatAsFraction(absIm, fMode).replace(/\.$/, '')}i`;
+      if (Math.abs(re) < 1e-11) return im < 0 ? `-${imPart}` : imPart;
+      return `${reStr}${im >= 0 ? '+' : '-'}${imPart}`;
+    }
+
+    function setCmplxDisplayStyle(style) {
+      S.cmplxDisplayStyle = style;
+      document.getElementById('cmplx-mode-default').classList.toggle('active-sub', style === 'DEFAULT');
+      document.getElementById('cmplx-mode-both').classList.toggle('active-sub', style === 'BOTH');
+
+      if (S.isEvaluated && S.lastComplex) {
+        if (S.complexView !== 3 && S.complexView !== 4) {
+          S.complexView = style === 'DEFAULT' ? 1 : 0;
+        }
+        S.resText = formatComplex(S.lastComplex, S.complexView, S.fracMode);
+        render();
+      }
+    }
+
+    function setFractionPreference(fStyle) {
+      S.preferredFracStyle = fStyle;
+      S.fracMode = fStyle;
+      updateFractionButtonsUI();
+
+      if (S.isEvaluated) {
+        if (S.mode === 'CMPLX' && S.lastComplex) {
+          S.resText = formatComplex(S.lastComplex, S.complexView, S.fracMode);
+        } else if (S.lastComplex && Math.abs(S.lastComplex.im) > 1e-11) {
+          S.resText = formatComplex(S.lastComplex, S.complexView, S.fracMode);
+        } else if (S.mode !== 'BASE') {
+          S.resText = formatAsFraction(S.rawNum, S.fracMode);
+        }
+        render();
+      }
+    }
+
+    function updateFractionButtonsUI() {
+      const btnMixed = document.getElementById('btn-frac-mixed');
+      const btnImp = document.getElementById('btn-frac-improper');
+      const btnDec = document.getElementById('btn-frac-dec');
+      if (!btnMixed) return;
+      const activeMode = S.isEvaluated ? S.fracMode : S.preferredFracStyle;
+      btnMixed.classList.toggle('active-sub', activeMode === 1);
+      btnImp.classList.toggle('active-sub', activeMode === 2);
+      btnDec.classList.toggle('active-sub', activeMode === 0);
+    }
+
+    // =========================================================================
+    // 8. 原子 Token 語法分析器
+    // =========================================================================
+    const PAREN_FUNCTIONS = [
+      'sin(', 'cos(', 'tan(', 'sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(',
+      'sinh(', 'cosh(', 'tanh(', 'sinh⁻¹(', 'cosh⁻¹(', 'tanh⁻¹(',
+      'log(', 'ln(', '10^(', 'e^(', '√(', '³√(',
+      'Pol(', 'Rec(', 'Abs(', 'arg(', 'Conjg(', 'Rnd('
+    ];
+
+    function evaluateSpringFunction(fn, arg1, arg2 = null) {
+      const x = arg1.re;
+      if (fn === '√') {
+        if (x < 0) {
+          if (S.mode === 'CMPLX') return new Complex(0, Math.sqrt(-x));
+          throw new Error('Math ERROR');
+        }
+        return new Complex(Math.sqrt(x), 0);
+      }
+      if (fn === '³√') return new Complex(Math.cbrt(x), 0);
+      if (fn === 'log') {
+        if (x <= 0) throw new Error('Math ERROR');
+        return new Complex(Math.log10(x), 0);
+      }
+      if (fn === 'ln') {
+        if (x <= 0) throw new Error('Math ERROR');
+        return new Complex(Math.log(x), 0);
+      }
+      if (fn === '10^') return new Complex(Math.pow(10, x), 0);
+      if (fn === 'e^') return new Complex(Math.exp(x), 0);
+      if (fn === 'sin') {
+        if (S.angle === 'D') {
+          const m = ((x % 360) + 360) % 360;
+          if (m === 0 || m === 180) return new Complex(0, 0);
+          if (m === 90) return new Complex(1, 0);
+          if (m === 270) return new Complex(-1, 0);
+          if (m === 30 || m === 150) return new Complex(0.5, 0);
+          if (m === 210 || m === 330) return new Complex(-0.5, 0);
+        }
+        return new Complex(Math.sin(degToRad(x)), 0);
+      }
+      if (fn === 'cos') {
+        if (S.angle === 'D') {
+          const m = ((x % 360) + 360) % 360;
+          if (m === 90 || m === 270) return new Complex(0, 0);
+          if (m === 0) return new Complex(1, 0);
+          if (m === 180) return new Complex(-1, 0);
+          if (m === 60 || m === 300) return new Complex(0.5, 0);
+          if (m === 120 || m === 240) return new Complex(-0.5, 0);
+        }
+        return new Complex(Math.cos(degToRad(x)), 0);
+      }
+      if (fn === 'tan') {
+        if (S.angle === 'D') {
+          const m = ((x % 360) + 360) % 360;
+          if (m === 90 || m === 270) throw new Error('Math ERROR');
+          if (m === 0 || m === 180) return new Complex(0, 0);
+          if (m === 45 || m === 225) return new Complex(1, 0);
+          if (m === 135 || m === 315) return new Complex(-1, 0);
+        }
+        return new Complex(Math.tan(degToRad(x)), 0);
+      }
+      if (fn === 'sin⁻¹') {
+        if (x < -1 || x > 1) throw new Error('Math ERROR');
+        return new Complex(radToDeg(Math.asin(x)), 0);
+      }
+      if (fn === 'cos⁻¹') {
+        if (x < -1 || x > 1) throw new Error('Math ERROR');
+        return new Complex(radToDeg(Math.acos(x)), 0);
+      }
+      if (fn === 'tan⁻¹') return new Complex(radToDeg(Math.atan(x)), 0);
+      if (fn === 'sinh') return new Complex(Math.sinh(x), 0);
+      if (fn === 'cosh') return new Complex(Math.cosh(x), 0);
+      if (fn === 'tanh') return new Complex(Math.tanh(x), 0);
+      if (fn === 'sinh⁻¹') return new Complex(Math.asinh(x), 0);
+      if (fn === 'cosh⁻¹') return new Complex(Math.acosh(x), 0);
+      if (fn === 'tanh⁻¹') return new Complex(Math.atanh(x), 0);
+      if (fn === 'Abs') return new Complex(arg1.abs(), 0);
+      if (fn === 'arg') return new Complex(radToDeg(arg1.arg()), 0);
+      if (fn === 'Conjg') return arg1.conj();
+      if (fn === 'Rnd') return new Complex(Math.round(x * 1e9) / 1e9, 0);
+      if (fn === 'Pol') {
+        if (!arg2) throw new Error('Syntax ERROR');
+        const r = Math.hypot(x, arg2.re);
+        const th = radToDeg(Math.atan2(arg2.re, x));
+        S.vars.X = cleanNum(r); S.vars.Y = cleanNum(th);
+        return new Complex(r, 0);
+      }
+      if (fn === 'Rec') {
+        if (!arg2) throw new Error('Syntax ERROR');
+        const rx = x * Math.cos(degToRad(arg2.re));
+        const ry = x * Math.sin(degToRad(arg2.re));
+        S.vars.X = cleanNum(rx); S.vars.Y = cleanNum(ry);
+        return new Complex(rx, 0);
+      }
+      throw new Error('Syntax ERROR');
+    }
+
+    function evaluateTokens(rawTokens) {
+      if (!rawTokens || rawTokens.length === 0) {
+        return { c: new Complex(S.ansVal, 0), hasFrac: false };
+      }
+
+      let assignTarget = null;
+      let workingTokens = [...rawTokens];
+      if (workingTokens.length >= 2 && workingTokens[workingTokens.length - 2] === '→') {
+        const vCandidate = workingTokens[workingTokens.length - 1];
+        if (/^[A-FXYM]$/.test(vCandidate)) {
+          assignTarget = vCandidate;
+          workingTokens = workingTokens.slice(0, -2);
+        }
+      }
+
+      if (S.mode === 'BASE') {
+        const rad = currentRadix();
+        let jsExpr = workingTokens.join('')
+          .replace(/and/g, '&').replace(/or/g, '|').replace(/xor/g, '^')
+          .replace(/xnor/g, '^~').replace(/Not\(/g, '~(').replace(/Neg\(/g, '-(');
+        jsExpr = jsExpr.replace(/[0-9A-F]+/g, m => {
+          const v = parseInt(m, rad);
+          if (Number.isNaN(v)) throw new Error('Syntax ERROR');
+          return String(v | 0);
+        });
+        jsExpr = jsExpr.replace(/×/g, '*').replace(/÷/g, '/');
+        const opens = (jsExpr.match(/\(/g) || []).length;
+        const closes = (jsExpr.match(/\)/g) || []).length;
+        if (opens > closes) jsExpr += ')'.repeat(opens - closes);
+        const val = Function(`"use strict"; return (${jsExpr});`)() | 0;
+        if (assignTarget) S.vars[assignTarget] = val;
+        return { c: new Complex(val, 0), hasFrac: false };
+      }
+
+      const lexed = [];
+      let hasFrac = false;
+      let i = 0;
+      while (i < workingTokens.length) {
+        const t = workingTokens[i];
+        if (/^[0-9.]$/.test(t)) {
+          let numStr = '', dotCount = 0;
+          while (i < workingTokens.length && /^[0-9.]$/.test(workingTokens[i])) {
+            if (workingTokens[i] === '.') dotCount++;
+            if (dotCount > 1) throw new Error('Syntax ERROR');
+            numStr += workingTokens[i];
+            i++;
+          }
+          const val = parseFloat(numStr);
+          if (Number.isNaN(val)) throw new Error('Syntax ERROR');
+          lexed.push({ type: 'NUM', val: new Complex(val, 0) });
+          continue;
+        }
+        if (t === '⌟') {
+          hasFrac = true;
+          lexed.push({ type: 'FRAC_SEP' });
+          i++;
+          continue;
+        }
+        if (t.startsWith('CONST_')) {
+          const code = t.slice(6);
+          lexed.push({ type: 'VAL', val: new Complex(CONST_DATA[code].val, 0) });
+          i++;
+          continue;
+        }
+        if (t.startsWith('CONV_')) {
+          const code = t.slice(5);
+          lexed.push({ type: 'POST_OP', op: t, convFn: CONV_DATA[code].fn });
+          i++;
+          continue;
+        }
+        if (t === 'Ans') {
+          lexed.push({ type: 'VAL', val: S.mode === 'CMPLX' && S.lastComplex ? S.lastComplex : new Complex(S.ansVal, 0) });
+        } else if (t === 'π') {
+          lexed.push({ type: 'VAL', val: new Complex(Math.PI, 0) });
+        } else if (t === 'e') {
+          lexed.push({ type: 'VAL', val: new Complex(Math.E, 0) });
+        } else if (t === 'i') {
+          lexed.push({ type: 'VAL', val: new Complex(0, 1) });
+        } else if (t === 'Ran#') {
+          lexed.push({ type: 'VAL', val: new Complex(Math.floor(Math.random() * 1000) / 1000, 0) });
+        } else if (/^[A-FXYM]$/.test(t)) {
+          lexed.push({ type: 'VAL', val: new Complex(S.vars[t] || 0, 0) });
+        } else if (['Σx²', 'Σx', 'n', 'x̄', 'σx', 'sx'].includes(t)) {
+          const sd = calcSD();
+          const map = { 'Σx²': sd.sx2, 'Σx': sd.sx, 'n': sd.n, 'x̄': sd.mean, 'σx': sd.popSd, 'sx': sd.sampSd };
+          lexed.push({ type: 'VAL', val: new Complex(map[t] || 0, 0) });
+        } else if (PAREN_FUNCTIONS.includes(t)) {
+          lexed.push({ type: 'PAREN_FN', fn: t.slice(0, -1) });
+        } else if (['sin ', 'cos ', 'tan ', 'sin⁻¹ ', 'cos⁻¹ ', 'tan⁻¹ ', 'sinh ', 'cosh ', 'tanh ', 'sinh⁻¹ ', 'cosh⁻¹ ', 'tanh⁻¹ ', 'log ', 'ln ', '10^', 'e^', '√', '³√'].includes(t)) {
+          lexed.push({ type: 'PRE_FN', fn: t.trim() });
+        } else if (['²', '³', '⁻¹', '!', '%', '►r∠θ', '►a+bi'].includes(t)) {
+          lexed.push({ type: 'POST_OP', op: t });
+        } else if (['+', '-', '×', '÷', '^', 'ˣ√', '×10^', 'P', 'C', '∠', '=', '≠', '>', '<', '≥', '≤'].includes(t)) {
+          lexed.push({ type: 'BIN_OP', op: t });
+        } else if (t === '(') {
+          lexed.push({ type: 'LPAREN' });
+        } else if (t === ')') {
+          lexed.push({ type: 'RPAREN' });
+        } else if (t === ',') {
+          lexed.push({ type: 'COMMA' });
+        }
+        i++;
+      }
+
+      const fracMerged = [];
+      for (let j = 0; j < lexed.length; j++) {
+        if (
+          j + 4 < lexed.length &&
+          lexed[j].type === 'NUM' && lexed[j + 1].type === 'FRAC_SEP' &&
+          lexed[j + 2].type === 'NUM' && lexed[j + 3].type === 'FRAC_SEP' &&
+          lexed[j + 4].type === 'NUM'
+        ) {
+          const a = lexed[j].val.re, b = lexed[j + 2].val.re, c = lexed[j + 4].val.re;
+          if (c === 0) throw new Error('Math ERROR');
+          fracMerged.push({ type: 'NUM', val: new Complex(a + b / c, 0) });
+          j += 4;
+        } else if (
+          j + 2 < lexed.length &&
+          lexed[j].type === 'NUM' && lexed[j + 1].type === 'FRAC_SEP' &&
+          lexed[j + 2].type === 'NUM'
+        ) {
+          const b = lexed[j].val.re, c = lexed[j + 2].val.re;
+          if (c === 0) throw new Error('Math ERROR');
+          fracMerged.push({ type: 'NUM', val: new Complex(b / c, 0) });
+          j += 2;
+        } else if (lexed[j].type === 'FRAC_SEP') {
+          throw new Error('Syntax ERROR');
+        } else {
+          fracMerged.push(lexed[j]);
+        }
+      }
+
+      const stream = [];
+      for (let j = 0; j < fracMerged.length; j++) {
+        const curr = fracMerged[j];
+        stream.push(curr);
+        if (j + 1 < fracMerged.length) {
+          const next = fracMerged[j + 1];
+          const leftIsVal = ['NUM', 'VAL', 'RPAREN', 'POST_OP'].includes(curr.type);
+          const rightIsVal = ['NUM', 'VAL', 'LPAREN', 'PRE_FN', 'PAREN_FN'].includes(next.type);
+          if (leftIsVal && rightIsVal) {
+            stream.push({ type: 'BIN_OP', op: 'IMPLICIT_MUL' });
+          }
+        }
+      }
+
+      let pos = 0, polarFlag = false;
+      function peek() { return stream[pos] || null; }
+      function consume() { return stream[pos++]; }
+
+      function parseCompare() {
+        let left = parseAddSub();
+        while (peek() && peek().type === 'BIN_OP' && ['=', '≠', '>', '<', '≥', '≤'].includes(peek().op)) {
+          const op = consume().op;
+          const right = parseAddSub();
+          let ok = false;
+          if (op === '=') ok = Math.abs(left.re - right.re) < 1e-11;
+          else if (op === '≠') ok = Math.abs(left.re - right.re) >= 1e-11;
+          else if (op === '>') ok = left.re > right.re;
+          else if (op === '<') ok = left.re < right.re;
+          else if (op === '≥') ok = left.re >= right.re - 1e-11;
+          else if (op === '≤') ok = left.re <= right.re + 1e-11;
+          left = new Complex(ok ? 1 : 0, 0);
+        }
+        return left;
+      }
+
+      function parseAddSub() {
+        let left = parseMulDiv();
+        while (peek() && peek().type === 'BIN_OP' && (peek().op === '+' || peek().op === '-')) {
+          const op = consume().op;
+          const right = parseMulDiv();
+          if (right.isPercent) {
+            const delta = left.mul(right);
+            left = op === '+' ? left.add(delta) : left.sub(delta);
+          } else {
+            left = op === '+' ? left.add(right) : left.sub(right);
+          }
+        }
+        return left;
+      }
+
+      function parseMulDiv() {
+        let left = parsePermComb();
+        while (peek() && peek().type === 'BIN_OP' && (peek().op === '×' || peek().op === '÷')) {
+          const op = consume().op;
+          const right = parsePermComb();
+          left = op === '×' ? left.mul(right) : left.div(right);
+        }
+        return left;
+      }
+
+      function parsePermComb() {
+        let left = parseImplicitAndPrefix();
+        while (peek() && peek().type === 'BIN_OP' && ['P', 'C', '∠'].includes(peek().op)) {
+          const op = consume().op;
+          const right = parseImplicitAndPrefix();
+          if (op === 'P') left = new Complex(calcPerm(left.re, right.re), 0);
+          else if (op === 'C') left = new Complex(calcComb(left.re, right.re), 0);
+          else if (op === '∠') left = Complex.fromPolar(left.re, degToRad(right.re));
+        }
+        return left;
+      }
+
+      function parseImplicitAndPrefix() {
+        let left = parseUnaryPrefix();
+        while (peek() && peek().type === 'BIN_OP' && peek().op === 'IMPLICIT_MUL') {
+          consume();
+          const right = parseUnaryPrefix();
+          left = left.mul(right);
+        }
+        return left;
+      }
+
+      function parseUnaryPrefix() {
+        const tk = peek();
+        if (!tk) throw new Error('Syntax ERROR');
+        if (tk.type === 'BIN_OP' && (tk.op === '+' || tk.op === '-')) {
+          consume();
+          const v = parseUnaryPrefix();
+          return tk.op === '-' ? new Complex(-v.re, -v.im) : v;
+        }
+        if (tk.type === 'PRE_FN') {
+          const fn = consume().fn;
+          const arg = parseUnaryPrefix();
+          return evaluateSpringFunction(fn, arg);
+        }
+        return parsePowerRoot();
+      }
+
+      function parsePowerRoot() {
+        let base = parsePostfix();
+        if (peek() && peek().type === 'BIN_OP' && ['^', 'ˣ√', '×10^'].includes(peek().op)) {
+          const op = consume().op;
+          const exp = parseUnaryPrefix();
+          if (op === '^') return base.pow(exp);
+          if (op === '×10^') return base.mul(new Complex(Math.pow(10, exp.re), 0));
+          if (op === 'ˣ√') {
+            if (base.re === 0) throw new Error('Math ERROR');
+            return new Complex(Math.pow(exp.re, 1 / base.re), 0);
+          }
+        }
+        return base;
+      }
+
+      function parsePostfix() {
+        let val = parsePrimary();
+        while (peek() && peek().type === 'POST_OP') {
+          const tk = consume();
+          const op = tk.op;
+          if (op === '²') val = val.mul(val);
+          else if (op === '³') val = val.mul(val).mul(val);
+          else if (op === '⁻¹') val = new Complex(1, 0).div(val);
+          else if (op === '!') val = new Complex(calcFactorial(val.re), 0);
+          else if (op === '%') {
+            val = new Complex(val.re / 100, val.im / 100);
+            val.isPercent = true;
+          } else if (op === '►r∠θ') polarFlag = true;
+          else if (op === '►a+bi') polarFlag = false;
+          else if (tk.convFn) val = new Complex(tk.convFn(val.re), 0);
+        }
+        return val;
+      }
+
+      function parsePrimary() {
+        const tk = peek();
+        if (!tk) throw new Error('Syntax ERROR');
+        if (tk.type === 'NUM' || tk.type === 'VAL') {
+          consume();
+          return tk.val;
+        }
+        if (tk.type === 'LPAREN') {
+          consume();
+          const inside = parseCompare();
+          if (peek() && peek().type === 'RPAREN') consume();
+          return inside;
+        }
+        if (tk.type === 'PAREN_FN') {
+          const fn = consume().fn;
+          const arg1 = parseCompare();
+          let arg2 = null;
+          if (peek() && peek().type === 'COMMA') {
+            consume();
+            arg2 = parseCompare();
+          }
+          if (peek() && peek().type === 'RPAREN') consume();
+          return evaluateSpringFunction(fn, arg1, arg2);
+        }
+        throw new Error('Syntax ERROR');
+      }
+
+      const finalComplex = parseCompare();
+      if (pos < stream.length) throw new Error('Syntax ERROR');
+      if (assignTarget) S.vars[assignTarget] = cleanNum(finalComplex.re);
+      return { c: finalComplex, hasFrac, polarFlag };
+    }
+
+    // =========================================================================
+    // 9. Casio Basic 直譯器與多重語句
+    // =========================================================================
+    function tokenizeBasicString(str) {
+      const words = [
+        ...PAREN_FUNCTIONS,
+        'sinh⁻¹ ', 'cosh⁻¹ ', 'tanh⁻¹ ', 'sin⁻¹ ', 'cos⁻¹ ', 'tan⁻¹ ',
+        'sinh ', 'cosh ', 'tanh ', 'sin ', 'cos ', 'tan ', 'log ', 'ln ',
+        '10^', 'e^', '³√', 'ˣ√', '×10^', 'Ans', 'Ran#'
+      ];
+      const out = [];
+      let i = 0;
+      const s = str.trim();
+      while (i < s.length) {
+        if (s[i] === ' ') { i++; continue; }
+        let matched = false;
+        for (const w of words) {
+          if (s.startsWith(w, i)) {
+            out.push(w);
+            i += w.length;
+            matched = true;
+            break;
+          }
+        }
+        if (matched) continue;
+        out.push(s[i]);
+        i++;
+      }
+      return out;
+    }
+
+    function runBasicScriptString(scriptText) {
+      const rawParts = [];
+      let buf = '';
+      for (let i = 0; i < scriptText.length; i++) {
+        const ch = scriptText[i];
+        if (ch === ':' || ch === '◢' || ch === '\n') {
+          if (buf.trim()) rawParts.push({ text: buf.trim(), pause: ch === '◢' });
+          buf = '';
+        } else {
+          buf += ch;
+        }
+      }
+      if (buf.trim()) rawParts.push({ text: buf.trim(), pause: false });
+      if (rawParts.length === 0) return;
+
+      S.basicStmts = rawParts;
+      S.basicPc = 0;
+      S.basicDispPaused = false;
+      S.basicWaitingVar = null;
+      stepBasicExecution();
+    }
+
+    function stepBasicExecution() {
+      let guard = 0;
+      while (S.basicPc < S.basicStmts.length && guard < 500) {
+        guard++;
+        const stmt = S.basicStmts[S.basicPc];
+        let txt = stmt.text;
+
+        if (/^Lbl\s+[0-9A-Z]$/i.test(txt)) {
+          S.basicPc++;
+          continue;
+        }
+
+        if (txt.includes('⇒')) {
+          const [condStr, actStr] = txt.split('⇒');
+          const condRes = evaluateTokens(tokenizeBasicString(condStr));
+          if (Math.abs(condRes.c.re) < 1e-11) {
+            S.basicPc++;
+            continue;
+          }
+          txt = actStr.trim();
+        }
+
+        const gotoMatch = txt.match(/^Goto\s+([0-9A-Z])$/i);
+        if (gotoMatch) {
+          const targetLbl = `Lbl ${gotoMatch[1]}`.toLowerCase();
+          const idx = S.basicStmts.findIndex(s => s.text.toLowerCase() === targetLbl);
+          if (idx === -1) {
+            S.resText = 'Goto ERROR';
+            S.isEvaluated = true;
+            S.basicStmts = [];
+            render();
+            return;
+          }
+          S.basicPc = idx + 1;
+          continue;
+        }
+
+        const promptMatch = txt.match(/^\?\s*→\s*([A-FXYM])$/);
+        if (promptMatch) {
+          const vName = promptMatch[1];
+          S.interactive = 'BASIC_PROMPT';
+          S.basicWaitingVar = vName;
+          S.promptText = `${vName}?`;
+          S.resText = formatNumber(S.vars[vName] || 0);
+          S.tokens = [];
+          S.cursor = 0;
+          render();
+          return;
+        }
+
+        try {
+          const tks = tokenizeBasicString(txt);
+          const { c, hasFrac } = evaluateTokens(tks);
+          S.lastComplex = c;
+          S.ansVal = cleanNum(c.re);
+          S.rawNum = cleanNum(c.re);
+          S.topOverride = txt;
+          S.promptText = '';
+          const activeFrac = hasFrac ? S.preferredFracStyle : 0;
+          S.resText = formatAsFraction(c.re, activeFrac);
+          S.isEvaluated = true;
+          S.basicPc++;
+
+          if (stmt.pause && S.basicPc < S.basicStmts.length) {
+            S.basicDispPaused = true;
+            render();
+            return;
+          }
+        } catch (err) {
+          S.resText = err.message === 'Syntax ERROR' ? 'Syntax ERROR' : 'Math ERROR';
+          S.isEvaluated = true;
+          S.basicStmts = [];
+          render();
+          return;
+        }
+      }
+
+      S.basicDispPaused = false;
+      S.interactive = null;
+      render();
+    }
+
+    // =========================================================================
+    // 10. 顯示屏渲染與工作台更新
+    // =========================================================================
+    function formatTokenForDisplay(t) {
+      if (t.startsWith('CONST_')) return CONST_DATA[t.slice(6)].sym;
+      if (t.startsWith('CONV_')) return CONV_DATA[t.slice(5)].lbl;
+      return t;
+    }
+
+    function currentRadix() {
+      if (S.baseType === 'h') return 16;
+      if (S.baseType === 'b') return 2;
+      if (S.baseType === 'o') return 8;
+      return 10;
+    }
+
+    function formatBase(n, radix = currentRadix()) {
+      n = n | 0;
+      let s = (n >>> 0).toString(radix).toUpperCase();
+      if (radix === 2 && s.length < 8) s = s.padStart(8, '0');
+      return s;
+    }
+
+    function calcSD() {
+      let n = 0, sx = 0, sx2 = 0;
+      for (const item of S.sdList) {
+        n += item.freq;
+        sx += item.x * item.freq;
+        sx2 += item.x * item.x * item.freq;
+      }
+      if (n === 0) return { n: 0, sx: 0, sx2: 0, mean: 0, popSd: 0, sampSd: 0 };
+      const mean = sx / n;
+      const popSd = Math.sqrt(Math.max(0, sx2 / n - mean * mean));
+      const sampSd = n > 1 ? Math.sqrt(Math.max(0, (sx2 - n * mean * mean) / (n - 1))) : 0;
+      return { n, sx, sx2, mean: cleanNum(mean), popSd: cleanNum(popSd), sampSd: cleanNum(sampSd) };
+    }
+
+    function render() {
+      document.getElementById('ind-S').classList.toggle('on', S.shift);
+      document.getElementById('ind-A').classList.toggle('on', S.alpha);
+      document.getElementById('ind-M').classList.toggle('on', S.vars.M !== 0);
+      document.getElementById('ind-STO').classList.toggle('on', S.stoMode);
+      document.getElementById('ind-RCL').classList.toggle('on', S.rclMode);
+      document.getElementById('ind-HYP').classList.toggle('on', S.hyp);
+      document.getElementById('ind-CMPLX').classList.toggle('on', S.mode === 'CMPLX');
+      document.getElementById('ind-SD').classList.toggle('on', S.mode === 'SD');
+      document.getElementById('ind-BASE').classList.toggle('on', S.mode === 'BASE');
+      document.getElementById('ind-INS').classList.toggle('on', S.insMode);
+      document.getElementById('ind-DISP').classList.toggle('on', S.basicDispPaused);
+
+      const bBadge = document.getElementById('ind-BASE-TYPE');
+      if (S.mode === 'BASE') {
+        bBadge.style.opacity = '1';
+        bBadge.innerText = S.baseType;
+      } else {
+        bBadge.style.opacity = '0';
+      }
+
+      document.getElementById('ind-D').classList.toggle('on', S.angle === 'D');
+      document.getElementById('ind-R').classList.toggle('on', S.angle === 'R');
+      document.getElementById('ind-G').classList.toggle('on', S.angle === 'G');
+
+      const hasIm = S.isEvaluated && S.lastComplex && (S.mode === 'CMPLX' || Math.abs(S.lastComplex.im) > 1e-11);
+      document.getElementById('ind-REIM').classList.toggle('on', Boolean(hasIm));
+
+      ['COMP', 'CMPLX', 'SD', 'BASE'].forEach(m => {
+        const b = document.getElementById(`tab-${m}`);
+        if (b) b.classList.toggle('active', S.mode === m);
+      });
+
+      updateFractionButtonsUI();
+
+      const memEl = document.getElementById('memGrid');
+      if (memEl) {
+        memEl.innerHTML = ['A', 'B', 'C', 'D', 'E', 'F', 'X', 'Y', 'M', 'Ans'].map(k => {
+          const rawVal = k === 'Ans' ? cleanNum(S.ansVal) : cleanNum(S.vars[k] || 0);
+          const val = typeof rawVal === 'number' ? (Math.abs(rawVal) >= 1e7 ? rawVal.toPrecision(7) : rawVal) : rawVal;
+          return `<div class="mem-chip" onclick="quickRecall('${k}')" title="點擊插入 ${k}"><b>${k}</b><span>${val}</span></div>`;
+        }).join('');
+      }
+
+      // 控制各分頁內置卡片顯示 (防止高度膨脹破壞排版)
+      const cBox = document.getElementById('cmplxInfoBox');
+      if (cBox) cBox.style.display = S.mode === 'CMPLX' ? 'block' : 'none';
+
+      const fCard = document.getElementById('fracCardBlock');
+      if (fCard) fCard.style.display = S.mode === 'BASE' ? 'none' : 'flex';
+
+      const bBox = document.getElementById('baseInfoBox');
+      if (S.mode === 'BASE') {
+        bBox.style.display = 'block';
+        const v = S.ansVal | 0;
+        document.getElementById('bDec').innerText = (v >>> 0).toString(10);
+        document.getElementById('bHex').innerText = (v >>> 0).toString(16).toUpperCase();
+        document.getElementById('bBin').innerText = (v >>> 0).toString(2);
+        document.getElementById('bOct').innerText = (v >>> 0).toString(8);
+      } else {
+        bBox.style.display = 'none';
+      }
+
+      const sdBox = document.getElementById('sdInfoBox');
+      if (S.mode === 'SD') {
+        sdBox.style.display = 'block';
+        const sd = calcSD();
+        document.getElementById('sdSummary').innerText = `n=${sd.n} | x̄=${sd.mean} | σx=${sd.popSd} | sx=${sd.sampSd}`;
+      } else {
+        sdBox.style.display = 'none';
+      }
+
+      const up = document.getElementById('lcdUpper');
+      const pm = document.getElementById('lcdPrompt');
+      const lw = document.getElementById('lcdLower');
+
+      if (S.clrMenu) {
+        up.innerText = 'Mcl   Mode   All';
+        pm.innerText = '';
+        lw.innerText = ' 1     2      3 ';
+        return;
+      }
+      if (S.modeMenuStep === 1) {
+        up.innerText = 'COMP  CMPLX  SD';
+        pm.innerText = '';
+        lw.innerText = ' 1      2     3 ';
+        return;
+      }
+      if (S.modeMenuStep === 2) {
+        up.innerText = 'SD    REG   BASE';
+        pm.innerText = '';
+        lw.innerText = ' 1     2      3 ';
+        return;
+      }
+      if (S.modeMenuStep === 3) {
+        up.innerText = 'Deg   Rad   Gra';
+        pm.innerText = '';
+        lw.innerText = ' 1     2     3 ';
+        return;
+      }
+      if (S.activeSubMenu === 'S_SUM') {
+        up.innerText = 'Σx²    Σx     n';
+        pm.innerText = '';
+        lw.innerText = ' 1      2     3 ';
+        return;
+      }
+      if (S.activeSubMenu === 'S_VAR') {
+        up.innerText = 'x̄      σx    sx';
+        pm.innerText = '';
+        lw.innerText = ' 1      2     3 ';
+        return;
+      }
+      if (S.activeSubMenu === 'LOGIC') {
+        up.innerText = 'and    or    xor';
+        pm.innerText = '';
+        lw.innerText = ' 1      2     3 ';
+        return;
+      }
+      if (S.activeSubMenu === 'P_CMD') {
+        up.innerText = '?   →   :   ◢   ⇒';
+        pm.innerText = '';
+        lw.innerText = '1   2   3   4   5';
+        return;
+      }
+
+      if (S.interactive === 'PROG_PICK') {
+        up.innerText = 'Prog 1-9, 0?';
+        pm.innerText = '';
+        lw.innerText = S.tokens.join('') || '';
+        return;
+      }
+      if (S.interactive === 'FMLA_PICK') {
+        up.innerHTML = `Formula No.?<span class="cursor-blink">_</span>`;
+        pm.innerText = '';
+        lw.innerText = S.tokens.join('') || '01-23';
+        return;
+      }
+      if (S.interactive === 'CONST_PICK') {
+        up.innerHTML = `Const No.?<span class="cursor-blink">_</span>`;
+        pm.innerText = '';
+        lw.innerText = S.tokens.join('') || '01-40';
+        return;
+      }
+      if (S.interactive === 'CONV_PICK') {
+        up.innerHTML = `Conv No.?<span class="cursor-blink">_</span>`;
+        pm.innerText = '';
+        lw.innerText = S.tokens.join('') || '01-40';
+        return;
+      }
+      if (S.interactive === 'BASIC_PROMPT') {
+        up.innerText = S.tokens.map(formatTokenForDisplay).join('') || 'Custom Prog';
+        pm.innerText = S.promptText;
+        lw.innerText = S.tokens.length > 0 ? S.tokens.map(formatTokenForDisplay).join('') : S.resText;
+        return;
+      }
+      if (S.interactive === 'PROG_RUN' || S.interactive === 'FMLA_RUN') {
+        up.innerText = S.currentProg.name;
+        pm.innerText = S.promptText;
+        lw.innerText = S.tokens.length > 0 ? S.tokens.map(formatTokenForDisplay).join('') : S.resText;
+        return;
+      }
+
+      const dispTokens = S.tokens.map(formatTokenForDisplay);
+      if (S.topOverride) {
+        up.innerText = S.topOverride;
+      } else if (S.isEvaluated) {
+        up.innerText = dispTokens.join('');
+      } else {
+        const leftStr = dispTokens.slice(0, S.cursor).join('');
+        const rightStr = dispTokens.slice(S.cursor).join('');
+        const curClass = S.insMode ? 'cursor-ins' : 'cursor-blink';
+        up.innerHTML = `${safe(leftStr)}<span class="${curClass}">_</span>${safe(rightStr)}`;
+      }
+      pm.innerText = S.promptText;
+      lw.innerText = S.resText;
+    }
+
+    function safe(s) {
+      return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // =========================================================================
+    // 11. 歷史紀錄與速查表
+    // =========================================================================
+    function pushAuditTape(exprStr, resStr, tokensSnapshot) {
+      S.auditTape.unshift({ expr: exprStr, res: resStr, tokens: [...tokensSnapshot] });
+      if (S.auditTape.length > 30) S.auditTape.pop();
+      renderTape();
+    }
+
+    function renderTape() {
+      const el = document.getElementById('tapeList');
+      if (S.auditTape.length === 0) {
+        el.innerHTML = '<div style="color: var(--text-muted); padding: 4px;">尚無計算紀錄。輸入算式並按 EXE。</div>';
+        return;
+      }
+      el.innerHTML = S.auditTape.map((item, idx) => `
+        <div class="tape-item" onclick="loadTapeItem(${idx})" title="點擊回載此算式">
+          <span>${safe(item.expr)}</span>
+          <b>= ${safe(item.res)}</b>
+        </div>
+      `).join('');
+    }
+
+    function loadTapeItem(idx) {
+      const item = S.auditTape[idx];
+      if (!item) return;
+      S.interactive = null;
+      S.tokens = [...item.tokens];
+      S.cursor = S.tokens.length;
+      S.isEvaluated = false;
+      S.topOverride = null;
+      render();
+    }
+
+    function clearTape() {
+      S.auditTape = [];
+      renderTape();
+    }
+
+    function switchWorkspace(tabId) {
+      ['main', 'prog', 'ref'].forEach(id => {
+        document.getElementById(`ws-tab-${id}`).classList.toggle('active', id === tabId);
+        document.getElementById(`ws-${id}`).classList.toggle('active', id === tabId);
+      });
+    }
+
+    function sortedEntries(obj) {
+      return Object.entries(obj).sort((a, b) => parseInt(a[0], 10) - parseInt(b[0], 10));
+    }
+
+    function renderRefList(type) {
+      const grid = document.getElementById('refGrid');
+      ['fmla', 'const', 'conv'].forEach(k => {
+        const b = document.getElementById(`ref-btn-${k}`);
+        if (b) b.classList.toggle('active-sub', k.toUpperCase() === type);
+      });
+
+      if (type === 'FMLA') {
+        grid.innerHTML = sortedEntries(BUILTIN_FMLA).map(([code, f]) => `
+          <div class="ref-item" onclick="startFmla('${code}')">
+            <span><b class="ref-code">${code}</b>${f.name.slice(3)}</span>
+            <span style="color:var(--text-muted); font-size:10px;">${f.desc}</span>
+          </div>
+        `).join('');
+      } else if (type === 'CONST') {
+        grid.innerHTML = sortedEntries(CONST_DATA).map(([code, c]) => `
+          <div class="ref-item" onclick="pickConst('${code}')" title="${c.name}: ${c.val}">
+            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+              <b class="ref-code">${code}</b><b>${c.sym}</b>
+              <span style="color:var(--text-muted); font-size:10px; margin-left:3px;">${c.name}</span>
+            </span>
+            <span class="const-val-tag">${formatConstValueForRef(c.val)}</span>
+          </div>
+        `).join('');
+      } else if (type === 'CONV') {
+        grid.innerHTML = sortedEntries(CONV_DATA).map(([code, c]) => `
+          <div class="ref-item" onclick="pickConv('${code}')">
+            <span><b class="ref-code">${code}</b>${c.lbl}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    function pickConst(code) {
+      S.interactive = null;
+      addToken(`CONST_${code}`);
+    }
+
+    function pickConv(code) {
+      S.interactive = null;
+      addToken(`CONV_${code}`);
+    }
+
+    // =========================================================================
+    // 12. 按鍵操作處理器
+    // =========================================================================
+    function switchMode(m) {
+      S.mode = m;
+      S.modeMenuStep = 0;
+      S.clrMenu = false;
+      S.activeSubMenu = null;
+      S.interactive = null;
+      S.tokens = [];
+      S.cursor = 0;
+      S.topOverride = null;
+      S.promptText = '';
+      S.resText = m === 'BASE' ? '0' : '0.';
+      S.isEvaluated = false;
+      S.lastComplex = null;
+      S.fracMode = 0;
+      S.engExpOffset = null;
+      S.stoMode = false;
+      S.rclMode = false;
+      render();
+    }
+
+    function pressShift() {
+      S.shift = !S.shift;
+      S.alpha = false;
+      render();
+    }
+
+    function pressAlpha() {
+      S.alpha = !S.alpha;
+      S.shift = false;
+      render();
+    }
+
+    function pressMode() {
+      if (S.shift) {
+        S.shift = false;
+        S.clrMenu = true;
+        S.modeMenuStep = 0;
+        render();
+        return;
+      }
+      S.clrMenu = false;
+      S.activeSubMenu = null;
+      S.modeMenuStep = (S.modeMenuStep + 1) % 4;
+      render();
+    }
+
+    function pressOn() { pressAc(); }
+
+    function pressAc() {
+      S.shift = false;
+      S.alpha = false;
+      S.hyp = false;
+      S.stoMode = false;
+      S.rclMode = false;
+      S.modeMenuStep = 0;
+      S.clrMenu = false;
+      S.activeSubMenu = null;
+      S.interactive = null;
+      S.basicStmts = [];
+      S.basicDispPaused = false;
+      S.tokens = [];
+      S.cursor = 0;
+      S.topOverride = null;
+      S.promptText = '';
+      S.resText = S.mode === 'BASE' ? '0' : '0.';
+      S.isEvaluated = false;
+      S.fracMode = 0;
+      S.engExpOffset = null;
+      render();
+    }
+
+    function pressDel() {
+      if (S.shift) {
+        S.shift = false;
+        S.insMode = !S.insMode;
+        render();
+        return;
+      }
+      if (S.isEvaluated) {
+        S.isEvaluated = false;
+        S.topOverride = null;
+        S.cursor = S.tokens.length;
+        render();
+        return;
+      }
+      if (S.cursor > 0) {
+        S.tokens.splice(S.cursor - 1, 1);
+        S.cursor--;
+      }
+      render();
+    }
+
+    function arrowMove(dir) {
+      if (dir === 'LEFT') {
+        if (S.isEvaluated) {
+          S.isEvaluated = false;
+          S.topOverride = null;
+          S.cursor = S.tokens.length;
+        } else {
+          S.cursor = Math.max(0, S.cursor - 1);
+        }
+      } else if (dir === 'RIGHT') {
+        if (S.isEvaluated) {
+          S.isEvaluated = false;
+          S.topOverride = null;
+          S.cursor = 0;
+        } else {
+          S.cursor = Math.min(S.tokens.length, S.cursor + 1);
+        }
+      } else if (dir === 'UP' && S.history.length > 0) {
+        S.histIdx = Math.max(0, S.histIdx - 1);
+        S.tokens = [...S.history[S.histIdx]];
+        S.cursor = S.tokens.length;
+        S.isEvaluated = false;
+      } else if (dir === 'DOWN' && S.history.length > 0) {
+        S.histIdx = Math.min(S.history.length - 1, S.histIdx + 1);
+        S.tokens = [...S.history[S.histIdx]];
+        S.cursor = S.tokens.length;
+        S.isEvaluated = false;
+      }
+      render();
+    }
+
+    function addToken(tk) {
+      S.topOverride = null;
+      S.engExpOffset = null;
+      const autoAnsOps = ['+', '-', '×', '÷', '^', '²', '³', '⁻¹', '!', '%', 'P', 'C', 'ˣ√', '→'];
+      if (S.isEvaluated) {
+        S.isEvaluated = false;
+        S.promptText = '';
+        S.fracMode = 0;
+        if (autoAnsOps.includes(tk) || tk.startsWith('CONV_')) {
+          S.tokens = ['Ans', tk];
+        } else {
+          S.tokens = [tk];
+        }
+        S.cursor = S.tokens.length;
+      } else {
+        if (!S.insMode && S.cursor < S.tokens.length) {
+          S.tokens.splice(S.cursor, 1, tk);
+        } else {
+          S.tokens.splice(S.cursor, 0, tk);
+        }
+        S.cursor++;
+      }
+      render();
+    }
+
+    function pressRclSto() {
+      if (S.shift) {
+        S.shift = false;
+        S.stoMode = !S.stoMode;
+        S.rclMode = false;
+      } else {
+        S.rclMode = !S.rclMode;
+        S.stoMode = false;
+      }
+      render();
+    }
+
+    function executeStoreTo(varName) {
+      S.stoMode = false;
+      S.shift = false;
+      S.alpha = false;
+      try {
+        let valToStore = S.ansVal;
+        let exprDisplay = 'Ans';
+        if (S.tokens.length > 0 && !S.isEvaluated) {
+          const res = evaluateTokens(S.tokens);
+          valToStore = cleanNum(res.c.re);
+          exprDisplay = S.tokens.map(formatTokenForDisplay).join('');
+          S.ansVal = valToStore;
+          S.rawNum = valToStore;
+          S.lastComplex = res.c;
+        } else if (S.tokens.length > 0 && S.isEvaluated) {
+          exprDisplay = S.tokens.map(formatTokenForDisplay).join('');
+        }
+        S.vars[varName] = valToStore;
+        S.topOverride = `${exprDisplay}→${varName}`;
+        S.promptText = '';
+        S.resText = formatNumber(valToStore);
+        S.isEvaluated = true;
+      } catch (e) {
+        S.resText = 'Math ERROR';
+        S.isEvaluated = true;
+      }
+      render();
+    }
+
+    function executeRecallFrom(varName) {
+      S.rclMode = false;
+      S.shift = false;
+      S.alpha = false;
+      if (S.tokens.length > 0 && !S.isEvaluated) {
+        addToken(varName);
+        return;
+      }
+      const val = S.vars[varName] || 0;
+      S.tokens = [varName];
+      S.cursor = 1;
+      S.topOverride = null;
+      S.promptText = `${varName}=`;
+      S.resText = formatNumber(val);
+      S.ansVal = val;
+      S.rawNum = val;
+      S.isEvaluated = true;
+      render();
+    }
+
+    function quickRecall(k) {
+      if (S.stoMode && k !== 'Ans') executeStoreTo(k);
+      else addToken(k);
+    }
+
+    function pressFracKey() {
+      const isShift = S.shift;
+      S.shift = false;
+      if (S.isEvaluated) {
+        if (isShift) {
+          S.fracMode = S.fracMode === 2 ? 1 : 2;
+        } else {
+          const targetStyle = S.preferredFracStyle === 2 ? 2 : 1;
+          S.fracMode = S.fracMode === 0 ? targetStyle : 0;
+        }
+        if (S.mode === 'CMPLX' && S.lastComplex) {
+          S.resText = formatComplex(S.lastComplex, S.complexView, S.fracMode);
+        } else if (S.lastComplex && Math.abs(S.lastComplex.im) > 1e-11) {
+          S.resText = formatComplex(S.lastComplex, S.complexView, S.fracMode);
+        } else {
+          S.resText = formatAsFraction(S.rawNum, S.fracMode);
+        }
+        render();
+        return;
+      }
+      addToken('⌟');
+    }
+
+    function pressProg() {
+      if (S.shift) { pressAc(); return; }
+      S.interactive = 'PROG_PICK';
+      S.tokens = [];
+      S.cursor = 0;
+      render();
+    }
+
+    function pressFmla() {
+      S.interactive = 'FMLA_PICK';
+      S.tokens = [];
+      S.cursor = 0;
+      switchWorkspace('ref');
+      renderRefList('FMLA');
+      render();
+    }
+
+    function startProg(numKey) {
+      const prog = DSE_PROGRAMS[numKey];
+      if (!prog) return;
+      const docEl = document.getElementById('progDocBox');
+      if (docEl) docEl.innerHTML = `<b>${prog.name}</b>：${prog.doc}`;
+      S.interactive = 'PROG_RUN';
+      S.currentProg = prog;
+      S.progStep = 0;
+      S.progInputs = {};
+      S.progOutputs = [];
+      S.progOutIdx = 0;
+      S.tokens = [];
+      S.cursor = 0;
+      const firstVar = prog.vars[0];
+      S.promptText = `${firstVar}?`;
+      S.resText = formatNumber(S.vars[firstVar] || 0);
+      render();
+    }
+
+    function startFmla(codeStr) {
+      const fmla = BUILTIN_FMLA[codeStr];
+      if (!fmla) {
+        S.resText = 'Syntax ERROR';
+        S.interactive = null;
+        render();
+        return;
+      }
+      S.interactive = 'FMLA_RUN';
+      S.currentProg = fmla;
+      S.progStep = 0;
+      S.progInputs = {};
+      S.progOutputs = [];
+      S.progOutIdx = 0;
+      S.tokens = [];
+      S.cursor = 0;
+      S.promptText = `${fmla.vars[0]}?`;
+      S.resText = '0.';
+      render();
+    }
+
+    function key(k, alphaChar = null) {
+      if (S.stoMode && alphaChar) { executeStoreTo(alphaChar); return; }
+      if (S.rclMode && alphaChar) { executeRecallFrom(alphaChar); return; }
+      S.stoMode = false;
+      S.rclMode = false;
+
+      if (S.clrMenu) {
+        S.clrMenu = false;
+        if (k === '1') {
+          clearAllMem();
+          S.topOverride = 'Memory Clear';
+          S.resText = '0.';
+          S.isEvaluated = true;
+        } else if (k === '2') {
+          S.mode = 'COMP';
+          S.angle = 'D';
+        } else if (k === '3') {
+          clearAllMem();
+          switchMode('COMP');
+        }
+        render();
+        return;
+      }
+
+      if (S.modeMenuStep === 1) {
+        if (k === '1') switchMode('COMP');
+        if (k === '2') switchMode('CMPLX');
+        if (k === '3') switchMode('SD');
+        return;
+      }
+      if (S.modeMenuStep === 2) {
+        if (k === '1') switchMode('SD');
+        if (k === '3') switchMode('BASE');
+        return;
+      }
+      if (S.modeMenuStep === 3) {
+        if (k === '1') S.angle = 'D';
+        if (k === '2') S.angle = 'R';
+        if (k === '3') S.angle = 'G';
+        S.modeMenuStep = 0;
+        render();
+        return;
+      }
+
+      if (S.activeSubMenu === 'S_SUM') {
+        S.activeSubMenu = null;
+        if (k === '1') addToken('Σx²');
+        if (k === '2') addToken('Σx');
+        if (k === '3') addToken('n');
+        return;
+      }
+      if (S.activeSubMenu === 'S_VAR') {
+        S.activeSubMenu = null;
+        if (k === '1') addToken('x̄');
+        if (k === '2') addToken('σx');
+        if (k === '3') addToken('sx');
+        return;
+      }
+      if (S.activeSubMenu === 'LOGIC') {
+        S.activeSubMenu = null;
+        if (k === '1') addToken('and');
+        if (k === '2') addToken('or');
+        if (k === '3') addToken('xor');
+        return;
+      }
+      if (S.activeSubMenu === 'P_CMD') {
+        S.activeSubMenu = null;
+        if (k === '1') addToken('?');
+        if (k === '2') addToken('→');
+        if (k === '3') addToken(':');
+        if (k === '4') addToken('◢');
+        if (k === '5') addToken('⇒');
+        return;
+      }
+
+      if (S.interactive === 'PROG_PICK' && DSE_PROGRAMS[k]) {
+        startProg(k);
+        return;
+      }
+      if (['FMLA_PICK', 'CONST_PICK', 'CONV_PICK'].includes(S.interactive) && /^[0-9]$/.test(k)) {
+        S.tokens.push(k);
+        if (S.tokens.length === 2) {
+          const code = S.tokens.join('');
+          const modeType = S.interactive;
+          S.tokens = [];
+          S.cursor = 0;
+          if (modeType === 'FMLA_PICK') startFmla(code);
+          else if (modeType === 'CONST_PICK') {
+            S.interactive = null;
+            if (CONST_DATA[code]) addToken(`CONST_${code}`);
+          } else if (modeType === 'CONV_PICK') {
+            S.interactive = null;
+            if (CONV_DATA[code]) addToken(`CONV_${code}`);
+          }
+        } else {
+          render();
+        }
+        return;
+      }
+
+      if (S.mode === 'BASE' && !S.shift && !S.alpha) {
+        if (k === 'SQ')  { S.baseType = 'd'; S.resText = formatBase(S.ansVal, 10); render(); return; }
+        if (k === 'POW') { S.baseType = 'h'; S.resText = formatBase(S.ansVal, 16); render(); return; }
+        if (k === 'LOG') { S.baseType = 'b'; S.resText = formatBase(S.ansVal, 2); render(); return; }
+        if (k === 'LN')  { S.baseType = 'o'; S.resText = formatBase(S.ansVal, 8); render(); return; }
+        if (k === 'INV') { S.activeSubMenu = 'LOGIC'; render(); return; }
+        if (alphaChar && ['A', 'B', 'C', 'D', 'E', 'F'].includes(alphaChar)) {
+          addToken(alphaChar);
+          return;
+        }
+      }
+
+      if (S.alpha) {
+        S.alpha = false;
+        if (k === 'LN') { addToken('e'); return; }
+        if (alphaChar) { addToken(alphaChar); return; }
+      }
+
+      if (k === 'HYP' && !S.shift && !S.alpha) {
+        S.hyp = !S.hyp;
+        render();
+        return;
+      }
+
+      const isShift = S.shift;
+      const isHyp = S.hyp;
+      S.shift = false;
+      S.hyp = false;
+
+      if (isShift) {
+        if (k === '7') {
+          S.interactive = 'CONST_PICK';
+          S.tokens = [];
+          switchWorkspace('ref');
+          renderRefList('CONST');
+          render();
+          return;
+        }
+        if (k === '8') {
+          S.interactive = 'CONV_PICK';
+          S.tokens = [];
+          switchWorkspace('ref');
+          renderRefList('CONV');
+          render();
+          return;
+        }
+        if (k === '9') {
+          S.clrMenu = true;
+          render();
+          return;
+        }
+        if (k === '1') { S.activeSubMenu = 'S_SUM'; render(); return; }
+        if (k === '2') { S.activeSubMenu = 'S_VAR'; render(); return; }
+        if (k === '3') { S.activeSubMenu = 'P_CMD'; render(); return; }
+        if (k === 'EXP') { addToken('π'); return; }
+        if (k === 'DOT') { addToken('Ran#'); return; }
+        if (k === '0') { addToken('Rnd('); return; }
+        if (k === 'LN') { addToken('e^('); return; }
+        if (k === 'LOG') { addToken('10^('); return; }
+        if (k === 'SIN') { addToken(isHyp ? 'sinh⁻¹(' : 'sin⁻¹('); return; }
+        if (k === 'COS') { addToken(isHyp ? 'cosh⁻¹(' : 'cos⁻¹('); return; }
+        if (k === 'TAN') { addToken(isHyp ? 'tanh⁻¹(' : 'tan⁻¹('); return; }
+        if (k === 'CUBE') { addToken('³√('); return; }
+        if (k === 'POW') { addToken('ˣ√'); return; }
+        if (k === 'INV') { addToken('!'); return; }
+        if (k === 'ENG') {
+          if (S.isEvaluated) {
+            S.engExpOffset = (S.engExpOffset === null ? 0 : S.engExpOffset) - 1;
+            S.resText = formatEng(S.rawNum, S.engExpOffset);
+            render();
+          }
+          return;
+        }
+        if (k === 'LPAREN') {
+          if (S.mode === 'CMPLX') addToken('arg(');
+          else addToken('%');
+          return;
+        }
+        if (k === 'RPAREN') { addToken('Abs('); return; }
+        if (k === 'COMMA') {
+          if (S.mode === 'CMPLX') addToken('Conjg(');
+          else addToken(';');
+          return;
+        }
+        if (k === 'NEG') { addToken('∠'); return; }
+        if (k === 'MUL') { addToken('P'); return; }
+        if (k === 'DIV') { addToken('C'); return; }
+        if (k === 'ADD') {
+          if (S.mode === 'CMPLX') addToken('►r∠θ');
+          else addToken('Pol(');
+          return;
+        }
+        if (k === 'SUB') {
+          if (S.mode === 'CMPLX') addToken('►a+bi');
+          else addToken('Rec(');
+          return;
+        }
+        if (k === 'MPLUS') {
+          const res = S.tokens.length > 0 && !S.isEvaluated ? evaluateTokens(S.tokens).c.re : S.ansVal;
+          S.vars.M = cleanNum((S.vars.M || 0) - res);
+          S.ansVal = res;
+          S.resText = formatNumber(res);
+          S.isEvaluated = true;
+          render();
+          return;
+        }
+        if (k === 'ANS') {
+          S.angle = S.angle === 'D' ? 'R' : S.angle === 'R' ? 'G' : 'D';
+          render();
+          return;
+        }
+      }
+
+      switch (k) {
+        case '0': case '1': case '2': case '3': case '4':
+        case '5': case '6': case '7': case '8': case '9':
+          addToken(k); break;
+        case 'DOT': addToken('.'); break;
+        case 'ADD': addToken('+'); break;
+        case 'SUB': addToken('-'); break;
+        case 'MUL': addToken('×'); break;
+        case 'DIV': addToken('÷'); break;
+        case 'LPAREN': addToken('('); break;
+        case 'RPAREN': addToken(')'); break;
+        case 'COMMA': addToken(','); break;
+        case 'NEG': addToken('-'); break;
+        case 'SIN': addToken(isHyp ? 'sinh(' : 'sin('); break;
+        case 'COS': addToken(isHyp ? 'cosh(' : 'cos('); break;
+        case 'TAN': addToken(isHyp ? 'tanh(' : 'tan('); break;
+        case 'LOG': addToken('log('); break;
+        case 'LN': addToken('ln('); break;
+        case 'SQRT': addToken('√('); break;
+        case 'SQ': addToken('²'); break;
+        case 'CUBE': addToken('³'); break;
+        case 'INV': addToken('⁻¹'); break;
+        case 'POW': addToken('^'); break;
+        case 'EXP': addToken('×10^'); break;
+        case 'ANS': addToken('Ans'); break;
+        case 'DMS':
+          if (S.isEvaluated) {
+            const d = Math.trunc(S.rawNum);
+            const mFull = Math.abs((S.rawNum - d) * 60);
+            const m = Math.trunc(mFull);
+            const s = Math.round((mFull - m) * 60 * 10) / 10;
+            S.resText = `${d}°${m}’${s}”`;
+            render();
+          }
+          break;
+        case 'ENG':
+          if (S.mode === 'CMPLX' && !S.isEvaluated) {
+            addToken('i');
+          } else if (S.isEvaluated) {
+            S.engExpOffset = (S.engExpOffset === null ? -1 : S.engExpOffset) + 1;
+            S.resText = formatEng(S.rawNum, S.engExpOffset);
+            render();
+          } else if (S.mode === 'CMPLX') {
+            addToken('i');
+          }
+          break;
+        case 'MPLUS':
+          if (S.mode === 'SD') {
+            const val = S.tokens.length > 0 ? evaluateTokens(S.tokens).c.re : S.ansVal;
+            S.sdList.push({ x: val, freq: 1 });
+            const sd = calcSD();
+            S.promptText = 'n=';
+            S.resText = String(sd.n);
+            S.tokens = [];
+            S.cursor = 0;
+            S.isEvaluated = true;
+            render();
+          } else {
+            const res = S.tokens.length > 0 && !S.isEvaluated ? evaluateTokens(S.tokens).c.re : S.ansVal;
+            S.vars.M = cleanNum((S.vars.M || 0) + res);
+            S.ansVal = res;
+            S.rawNum = res;
+            S.resText = formatNumber(res);
+            S.isEvaluated = true;
+            render();
+          }
+          break;
+      }
+    }
+
+    // =========================================================================
+    // 13. EXE 執行與 SHIFT+EXE (Re⇔Im 實部虛部切換)
+    // =========================================================================
+    function pressExe() {
+      if (S.shift && S.isEvaluated && S.lastComplex) {
+        S.shift = false;
+        if (S.complexView === 3) {
+          S.complexView = 4;
+        } else if (S.complexView === 4) {
+          S.complexView = 3;
+        } else if (S.complexView === 1) {
+          S.complexView = 2;
+        } else {
+          S.complexView = 1;
+        }
+        S.resText = formatComplex(S.lastComplex, S.complexView, S.fracMode);
+        render();
+        return;
+      }
+      S.shift = false;
+      S.topOverride = null;
+      S.engExpOffset = null;
+
+      if (S.basicDispPaused) {
+        S.basicDispPaused = false;
+        stepBasicExecution();
+        return;
+      }
+
+      if (S.interactive === 'BASIC_PROMPT') {
+        const vName = S.basicWaitingVar;
+        let val = S.vars[vName] || 0;
+        if (S.tokens.length > 0) val = evaluateTokens(S.tokens).c.re;
+        S.vars[vName] = cleanNum(val);
+        S.tokens = [];
+        S.cursor = 0;
+        S.interactive = null;
+        S.basicWaitingVar = null;
+        S.basicPc++;
+        stepBasicExecution();
+        return;
+      }
+
+      if (S.interactive === 'PROG_RUN' || S.interactive === 'FMLA_RUN') {
+        const prog = S.currentProg;
+        if (S.progOutputs.length > 0) {
+          if (S.progOutIdx < S.progOutputs.length - 1) {
+            S.progOutIdx++;
+            const out = S.progOutputs[S.progOutIdx];
+            S.promptText = out.label;
+            S.resText = formatNumber(out.val);
+            if (typeof out.val === 'number') { S.ansVal = out.val; S.rawNum = out.val; }
+          } else {
+            S.progStep = 0;
+            S.progInputs = {};
+            S.progOutputs = [];
+            S.progOutIdx = 0;
+            const v0 = prog.vars[0];
+            S.promptText = `${v0}?`;
+            S.resText = formatNumber(S.vars[v0] || 0);
+          }
+          render();
+          return;
+        }
+
+        const vName = prog.vars[S.progStep];
+        let val = S.vars[vName] || 0;
+        if (S.tokens.length > 0) val = evaluateTokens(S.tokens).c.re;
+        S.progInputs[vName] = val;
+        if (S.vars[vName] !== undefined) S.vars[vName] = cleanNum(val);
+        S.tokens = [];
+        S.cursor = 0;
+        S.progStep++;
+
+        if (S.progStep < prog.vars.length) {
+          const nextV = prog.vars[S.progStep];
+          S.promptText = `${nextV}?`;
+          S.resText = formatNumber(S.vars[nextV] || 0);
+        } else {
+          const outs = prog.execute(S.progInputs);
+          S.progOutputs = outs;
+          S.progOutIdx = 0;
+          S.promptText = outs[0].label;
+          S.resText = formatNumber(outs[0].val);
+          if (typeof outs[0].val === 'number') { S.ansVal = outs[0].val; S.rawNum = outs[0].val; }
+        }
+        render();
+        return;
+      }
+
+      if (S.tokens.length === 0) {
+        S.resText = S.mode === 'BASE' ? formatBase(S.ansVal) : formatAsFraction(S.ansVal, S.fracMode);
+        S.isEvaluated = true;
+        render();
+        return;
+      }
+
+      if (S.tokens.includes(':') || S.tokens.includes('◢') || S.tokens.includes('?')) {
+        const scriptStr = S.tokens.map(formatTokenForDisplay).join('');
+        S.history.push([...S.tokens]);
+        S.histIdx = S.history.length;
+        runBasicScriptString(scriptStr);
+        return;
+      }
+
+      try {
+        S.history.push([...S.tokens]);
+        S.histIdx = S.history.length;
+        S.promptText = '';
+
+        const { c, hasFrac, polarFlag } = evaluateTokens(S.tokens);
+        S.lastComplex = c;
+        S.ansVal = cleanNum(c.re);
+        S.rawNum = cleanNum(c.re);
+        S.fracMode = hasFrac ? (S.preferredFracStyle || 1) : (S.preferredFracStyle === 0 ? 0 : S.fracMode);
+
+        if (S.mode === 'BASE') {
+          S.resText = formatBase(c.re);
+        } else if (S.mode === 'CMPLX' || Math.abs(c.im) > 1e-11 || polarFlag) {
+          if (polarFlag) {
+            S.complexView = 3;
+          } else {
+            S.complexView = S.cmplxDisplayStyle === 'DEFAULT' ? 1 : 0;
+          }
+          S.resText = formatComplex(c, S.complexView, S.fracMode);
+          const fullTapeStr = formatComplex(c, polarFlag ? 3 : 0, S.fracMode);
+          S.isEvaluated = true;
+          pushAuditTape(S.tokens.map(formatTokenForDisplay).join(''), fullTapeStr, S.tokens);
+          render();
+          return;
+        } else {
+          S.resText = formatAsFraction(c.re, S.fracMode);
+        }
+        S.isEvaluated = true;
+        pushAuditTape(S.tokens.map(formatTokenForDisplay).join(''), S.resText, S.tokens);
+      } catch (e) {
+        S.resText = e.message === 'Syntax ERROR' ? 'Syntax ERROR' : 'Math ERROR';
+        S.isEvaluated = true;
+      }
+      render();
+    }
+
+    // =========================================================================
+    // 14. 自訂編程編輯器與示範函數
+    // =========================================================================
+    function loadSlotToEditor() {
+      const slot = document.getElementById('progSlotSelect').value;
+      document.getElementById('basicEditor').value = CUSTOM_BASIC_SCRIPTS[slot] || '';
+    }
+
+    function insertBasicToken(str) {
+      const ed = document.getElementById('basicEditor');
+      const start = ed.selectionStart;
+      const end = ed.selectionEnd;
+      const val = ed.value;
+      ed.value = val.slice(0, start) + str + val.slice(end);
+      ed.focus();
+      ed.selectionStart = ed.selectionEnd = start + str.length;
+    }
+
+    function saveCustomProg() {
+      const slot = document.getElementById('progSlotSelect').value;
+      const code = document.getElementById('basicEditor').value.trim();
+      CUSTOM_BASIC_SCRIPTS[slot] = code;
+      if (!code) return;
+      if (S.mode !== 'COMP') switchMode('COMP');
+      runBasicScriptString(code);
+    }
+
+    function demoFuncParen() {
+      if (S.mode !== 'COMP') switchMode('COMP');
+      S.interactive = null;
+      S.tokens = ['sin(', '3', '0', ')', '+', 'log(', '1', '0', '0', ')'];
+      S.cursor = S.tokens.length;
+      S.isEvaluated = false;
+      pressExe();
+    }
+
+    function demoMultiStmt() {
+      if (S.mode !== 'COMP') switchMode('COMP');
+      S.interactive = null;
+      S.tokens = ['2', '+', '3', '◢', '4', '×', '5'];
+      S.cursor = S.tokens.length;
+      S.isEvaluated = false;
+      pressExe();
+    }
+
+    function demoEngShift() {
+      if (S.mode !== 'COMP') switchMode('COMP');
+      S.interactive = null;
+      S.tokens = ['1', '2', '3', '4', '5'];
+      S.cursor = S.tokens.length;
+      S.isEvaluated = false;
+      pressExe();
+      key('ENG');
+    }
+
+    function demoConstG() {
+      if (S.mode !== 'COMP') switchMode('COMP');
+      S.interactive = null;
+      S.tokens = ['CONST_35'];
+      S.cursor = 1;
+      S.isEvaluated = false;
+      pressExe();
+    }
+
+    function demoConvInCm() {
+      if (S.mode !== 'COMP') switchMode('COMP');
+      S.interactive = null;
+      S.tokens = ['1', '0', 'CONV_01'];
+      S.cursor = 3;
+      S.isEvaluated = false;
+      pressExe();
+    }
+
+    function demoComplexDiv() {
+      switchMode('CMPLX');
+      S.tokens = ['(', '2', '+', '3', 'i', ')', '÷', '(', '1', '-', 'i', ')'];
+      S.cursor = S.tokens.length;
+      pressExe();
+    }
+
+    function clearAllMem() {
+      S.vars = { A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, X: 0, Y: 0, M: 0 };
+      render();
+    }
+
+    function loadSampleSD() {
+      switchMode('SD');
+      S.sdList = [{ x: 10, freq: 1 }, { x: 20, freq: 1 }, { x: 30, freq: 1 }];
+      S.promptText = 'n=';
+      S.resText = '3';
+      S.isEvaluated = true;
+      render();
+    }
+
+    function runProgDirect(numKey) {
+      if (S.mode !== 'COMP') switchMode('COMP');
+      startProg(numKey);
+    }
+
+    function toggleTheme() {
+      const root = document.documentElement;
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        document.getElementById('themeBtn').innerText = '☾ 深色';
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        document.getElementById('themeBtn').innerText = '☀ 淺色';
+      }
+    }
+
+    function downloadCode() {
+      const full = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([full], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CASIO-fx-50FH-II-Minimalist.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    window.addEventListener('keydown', e => {
+      if (document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
+      if (e.key >= '0' && e.key <= '9') { e.preventDefault(); key(e.key); }
+      else if (e.key === '.') { e.preventDefault(); key('DOT'); }
+      else if (e.key === '+') { e.preventDefault(); key('ADD'); }
+      else if (e.key === '-') { e.preventDefault(); key('SUB'); }
+      else if (e.key === '*') { e.preventDefault(); key('MUL'); }
+      else if (e.key === '/') { e.preventDefault(); key('DIV'); }
+      else if (e.key === '^') { e.preventDefault(); key('POW'); }
+      else if (e.key === '(') { e.preventDefault(); key('LPAREN'); }
+      else if (e.key === ')') { e.preventDefault(); key('RPAREN'); }
+      else if (e.key === ':') { e.preventDefault(); addToken(':'); }
+      else if (e.key === '?') { e.preventDefault(); addToken('?'); }
+      else if (e.key === '!') { e.preventDefault(); addToken('!'); }
+      else if (e.key === '%') { e.preventDefault(); addToken('%'); }
+      else if (e.key === 'i') {
+        e.preventDefault();
+        if (S.mode !== 'CMPLX') S.mode = 'CMPLX';
+        addToken('i');
+      }
+      else if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); pressExe(); }
+      else if (e.key === 'Backspace') { e.preventDefault(); pressDel(); }
+      else if (e.key === 'Escape') { e.preventDefault(); pressAc(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); arrowMove('LEFT'); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); arrowMove('RIGHT'); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); arrowMove('UP'); }
+      else if (e.key === 'ArrowDown') { e.preventDefault(); arrowMove('DOWN'); }
+    });
+
+    window.onload = () => {
+      loadSlotToEditor();
+      renderRefList('FMLA');
+      render();
+    };
+  </script>
+</body>
+</html>
