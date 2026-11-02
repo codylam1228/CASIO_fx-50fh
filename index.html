@@ -34,6 +34,7 @@
       --accent: #18181b;
       --surface-hover: #f4f4f5;
       --chip-bg: #f8fafc;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Segoe UI Symbol", "Apple Symbols", "Courier New", monospace;
     }
 
     [data-theme="dark"] {
@@ -68,12 +69,13 @@
       margin: 0;
       padding: 0;
       -webkit-font-smoothing: antialiased;
+      font-variant-emoji: text;
     }
 
     body {
       background-color: var(--bg-page);
       color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "Segoe UI", "Segoe UI Symbol", "Apple Symbols", sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -86,7 +88,7 @@
     .app-layout {
       display: flex;
       flex-direction: row;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       gap: 24px;
       width: 100%;
@@ -141,7 +143,7 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--text-muted);
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: var(--font-mono);
     }
 
     .solar-cell {
@@ -182,11 +184,12 @@
       border: 1px solid rgba(0, 0, 0, 0.18);
       border-radius: 8px;
       height: 92px;
-      padding: 6px 10px;
+      padding: 6px 8px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       margin-bottom: 14px;
+      overflow: hidden;
       transition: background-color 0.2s ease;
     }
 
@@ -205,24 +208,32 @@
     .lcd-badges {
       display: flex;
       justify-content: space-between;
-      font-size: 8.5px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      align-items: center;
+      font-size: 7.5px;
+      letter-spacing: -0.2px;
+      font-family: var(--font-mono);
       font-weight: 800;
       color: var(--lcd-text);
       height: 13px;
       border-bottom: 1px solid rgba(24, 32, 25, 0.14);
+      width: 100%;
+      overflow: hidden;
     }
 
     .badge-sub {
       display: flex;
-      gap: 2.5px;
+      gap: 1.5px;
       align-items: center;
+      flex-shrink: 1;
+      min-width: 0;
     }
 
     .ind {
       opacity: 0.14;
-      padding: 0 2px;
+      padding: 0 1.5px;
       border-radius: 2px;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .ind.on {
@@ -232,7 +243,7 @@
     }
 
     .lcd-input {
-      font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 16.5px;
       font-weight: 700;
       color: var(--lcd-text);
@@ -247,7 +258,7 @@
     .lcd-input::-webkit-scrollbar { display: none; }
 
     .lcd-result {
-      font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+      font-family: var(--font-mono);
       font-size: 23px;
       font-weight: 800;
       color: var(--lcd-text);
@@ -435,11 +446,13 @@
     .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
     .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 
+    /* 修復 1：移除固定高度 height: 640px，改用 min-height 與 fit-content 防止子容器撐破遮蔽底部圓角 */
     .side-panel {
       flex: 1;
       width: 100%;
       max-width: 580px;
-      height: 640px;
+      min-height: 640px;
+      height: fit-content;
       background-color: var(--bg-panel);
       border: 1px solid var(--border-color);
       border-radius: 20px;
@@ -511,21 +524,25 @@
       display: none;
       flex: 1;
       flex-direction: column;
-      min-height: 0;
+      min-height: auto;
+      height: fit-content;
     }
 
     .ws-section.active {
       display: flex;
     }
 
+    /* 修復 1：外層卡片容器使用 height: fit-content; min-height: auto; 並保留底部內距 */
     .card-block {
       background-color: var(--chip-bg);
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 9px 12px;
+      padding: 9px 12px 11px;
       margin-bottom: 8px;
       font-size: 12px;
       flex-shrink: 0;
+      min-height: auto;
+      height: fit-content;
     }
 
     .card-block.flex-grow-card {
@@ -533,7 +550,9 @@
       display: flex;
       flex-direction: column;
       margin-bottom: 0;
-      min-height: 0;
+      min-height: auto;
+      height: fit-content;
+      padding-bottom: 12px;
     }
 
     .sec-title {
@@ -546,25 +565,42 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 8px;
       flex-shrink: 0;
     }
 
     .pill-wrap {
       display: flex;
       flex-wrap: wrap;
-      gap: 5px;
+      gap: 6px;
     }
 
+    /* 修復 2：編程工具列改用 CSS Grid 緊湊網格對齊，消除第二行獨立掉行與左側留白過大問題 */
+    .basic-toolbar {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+
+    /* 修復 3：按鈕內部加上 inline-flex、垂直居中與 4px 間距，避免特殊符號與文字貼太近或偏斜 */
     .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
       background-color: var(--bg-panel);
       color: var(--text-main);
       border: 1px solid var(--border-color);
-      padding: 4px 8px;
+      padding: 5px 8px;
       border-radius: 6px;
       font-size: 11px;
       font-weight: 600;
+      font-family: inherit;
+      line-height: 1.2;
       cursor: pointer;
       transition: all 0.1s;
+      white-space: nowrap;
     }
 
     .pill-btn:hover {
@@ -589,7 +625,7 @@
       border: 1px solid var(--border-color);
       border-radius: 6px;
       padding: 4px 6px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: var(--font-mono);
       font-size: 11px;
       display: flex;
       justify-content: space-between;
@@ -605,7 +641,7 @@
     .tape-list {
       flex: 1;
       overflow-y: auto;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: var(--font-mono);
       font-size: 11.5px;
       min-height: 70px;
       max-height: 140px;
@@ -623,7 +659,6 @@
     .tape-item:last-child { border-bottom: none; }
     .tape-item:hover { background-color: var(--surface-hover); }
 
-    /* Drag & Drop Slots & Pool (已補上修復樣式) */
     .slot-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -637,11 +672,12 @@
       border-radius: 8px;
       padding: 6px 8px;
       cursor: pointer;
-      transition: all 0.12s ease;
+      transition: all 0.14s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 54px;
+      min-height: 56px;
+      position: relative;
     }
 
     .slot-card.active-slot {
@@ -651,9 +687,19 @@
     }
 
     .slot-card.drag-over {
-      border-style: solid;
+      border-style: dashed;
       border-color: var(--c-base);
-      transform: scale(1.02);
+      box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.25);
+      transform: scale(1.03);
+    }
+
+    @keyframes slotFlash {
+      0% { background-color: rgba(5, 150, 105, 0.35); transform: scale(1.03); }
+      100% { background-color: var(--surface-hover); transform: scale(1); }
+    }
+
+    .slot-card.flash-success {
+      animation: slotFlash 0.45s ease-out;
     }
 
     .slot-hdr {
@@ -664,6 +710,30 @@
       font-weight: 800;
       color: var(--key-prog-bg);
       margin-bottom: 3px;
+    }
+
+    .slot-actions {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .slot-clear-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      border-radius: 4px;
+      padding: 0 4px;
+      font-size: 9px;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 14px;
+    }
+
+    .slot-clear-btn:hover {
+      color: var(--key-ac-bg);
+      border-color: var(--border-color);
+      background-color: var(--bg-panel);
     }
 
     .slot-run-btn {
@@ -690,7 +760,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 5px;
-      max-height: 112px;
+      max-height: 106px;
       overflow-y: auto;
       padding-right: 2px;
     }
@@ -707,9 +777,10 @@
       justify-content: space-between;
       align-items: center;
       gap: 4px;
-      transition: border-color 0.1s;
+      transition: border-color 0.1s, opacity 0.15s;
       -webkit-user-drag: element;
       user-select: none;
+      touch-action: none;
     }
 
     .pool-item:hover {
@@ -721,27 +792,67 @@
       cursor: grabbing;
     }
 
+    .pool-item.dragging-source {
+      opacity: 0.4;
+      border-style: dashed;
+    }
+
+    .drag-ghost {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      background-color: var(--bg-panel);
+      color: var(--text-main);
+      border: 1.5px solid var(--key-prog-bg);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+      opacity: 0.92;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transform: translate(-50%, -50%) scale(1.04);
+      white-space: nowrap;
+    }
+
     .pool-tag {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: var(--font-mono);
       font-size: 9.5px;
       font-weight: 800;
       color: var(--c-shift);
       flex-shrink: 0;
     }
 
+    /* 修復 1：確保編輯框良好包覆於父卡片內，不會超出底部邊界 */
     .code-area {
-      flex: 1;
+      display: block;
       width: 100%;
-      min-height: 82px;
+      min-height: 92px;
       background-color: var(--bg-panel);
       color: var(--text-main);
       border: 1px solid var(--border-color);
       border-radius: 6px;
-      padding: 7px 8px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11.5px;
-      resize: none;
-      margin-top: 4px;
+      padding: 8px 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.55;
+      letter-spacing: 0.2px;
+      resize: vertical;
+      margin-top: 2px;
+      font-variant-emoji: text;
+    }
+
+    /* 修復 3：調整 ◢ 符號垂直居中與行高，配合按鈕 gap: 4px 完美對齊基線 */
+    .disp-tri {
+      font-family: "Segoe UI Symbol", "Apple Symbols", sans-serif;
+      font-size: 9.5px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
 
     .ref-grid {
@@ -751,7 +862,7 @@
       align-content: start;
       gap: 6px;
       overflow-y: auto;
-      max-height: 380px;
+      max-height: 410px;
       padding-right: 4px;
     }
 
@@ -766,22 +877,53 @@
       justify-content: space-between;
       align-items: center;
       gap: 6px;
+      min-width: 0;
+      transition: border-color 0.1s, background-color 0.1s;
     }
 
-    .ref-item:hover { border-color: var(--text-main); }
+    .ref-item:hover {
+      border-color: var(--text-main);
+      background-color: var(--surface-hover);
+    }
+
+    .ref-left {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      min-width: 0;
+      flex: 1;
+      overflow: hidden;
+    }
+
     .ref-code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: var(--font-mono);
       font-weight: 800;
       color: var(--c-shift);
-      margin-right: 4px;
+      flex-shrink: 0;
+    }
+
+    .ref-sym {
+      font-family: var(--font-mono);
+      font-weight: 800;
+      color: var(--text-main);
+      flex-shrink: 0;
+    }
+
+    .ref-name {
+      color: var(--text-muted);
+      font-size: 10px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .const-val-tag {
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 10.5px;
+      font-family: var(--font-mono);
+      font-size: 10px;
       font-weight: 700;
       color: var(--c-base);
       white-space: nowrap;
+      flex-shrink: 0;
     }
   </style>
 </head>
@@ -1078,6 +1220,7 @@
         </div>
         <div class="hdr-actions">
           <button class="action-btn" onclick="toggleTheme()" id="themeBtn">☾ 深色</button>
+          <button class="action-btn" onclick="downloadCode()">⬇ 下載 HTML</button>
         </div>
       </div>
 
@@ -1124,7 +1267,7 @@
 
         <div id="baseInfoBox" class="card-block" style="display: none; padding: 6px 10px;">
           <div class="sec-title"><span>BASE-N 四進制即時對照</span></div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-family: monospace; font-size: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-family: var(--font-mono); font-size: 12px;">
             <div>DEC: <b id="bDec">0</b></div>
             <div>HEX: <b id="bHex">0</b></div>
             <div>BIN: <b id="bBin">0</b></div>
@@ -1140,7 +1283,7 @@
               <button class="pill-btn" onclick="clearSDData()">清除 SD</button>
             </div>
           </div>
-          <div id="sdSummary" style="font-family: monospace; font-size: 11.5px;">n=0 | x̄=0 | σx=0 | sx=0</div>
+          <div id="sdSummary" style="font-family: var(--font-mono); font-size: 11.5px;">n=0 | x̄=0 | σx=0 | sx=0</div>
         </div>
 
         <div class="card-block">
@@ -1166,6 +1309,7 @@
           <div class="pill-wrap">
             <button class="pill-btn" onclick="demoPermComb()">10C3 + 5P2 (=140)</button>
             <button class="pill-btn" onclick="demoConstInExpr()">2 × CONST 35 (2g=19.6133)</button>
+            <button class="pill-btn" onclick="demoPowParen()">2^(3+1) (=16)</button>
             <button class="pill-btn" onclick="demoDmsCalc()">12°30’ + 45’ (=13.25°)</button>
             <button class="pill-btn" onclick="demoMultiStmt()">多重語句 2+3◢ 4×5◢</button>
             <button class="pill-btn" onclick="demoConvInCm()">10 in►cm (=25.4)</button>
@@ -1178,12 +1322,12 @@
       <div id="ws-prog" class="ws-section">
         <div class="card-block" style="padding: 8px 10px;">
           <div class="sec-title" style="margin-bottom: 5px;">
-            <span>機身 P1–P4 程式槽 (從下方 Pool 拖放替換，或按機身 Prog + 1–4 執行)</span>
+            <span>機身 P1–P4 程式槽 (支援滑鼠/觸控拖放替換，或按 Prog + 1–4 執行)</span>
             <button class="pill-btn" onclick="resetDefaultSlots()">還原預設 P1–P4</button>
           </div>
           <div class="slot-grid" id="slotGrid"></div>
           <div id="progDocBox" style="font-size: 10.5px; color: var(--text-muted); padding-top: 3px; border-top: 1px solid var(--border-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            提示：將下方程式拖入 P1–P4 即可安裝入機；點擊 ▶ 可立即執行。
+            提示：將下方程式拖入 P1–P4 即可安裝入機；點擊 ▶ 可立即執行，點擊 ✕ 可清空插槽。
           </div>
         </div>
 
@@ -1195,17 +1339,18 @@
         </div>
 
         <div class="card-block flex-grow-card">
-          <div class="sec-title" style="margin-bottom: 4px;">
+          <div class="sec-title" style="margin-bottom: 6px;">
             <span id="editorTitleLbl">Slot P1 Casio Basic 源碼編輯器</span>
             <div style="display:flex; gap:4px;">
               <button class="pill-btn" onclick="saveAndRunActiveSlot()">儲存至當前 Slot 並執行 ▶</button>
             </div>
           </div>
-          <div class="pill-wrap" style="margin-bottom: 4px;">
+          <!-- 修復 2 & 3：採用 CSS Grid 統一網格對齊，並透過 inline-flex + gap: 4px 修正 ◢ 符號垂直居中與間距 -->
+          <div class="basic-toolbar">
             <button class="pill-btn" onclick="insertBasicToken('?→')">?→ 輸入</button>
             <button class="pill-btn" onclick="insertBasicToken('→')">→ 賦值</button>
             <button class="pill-btn" onclick="insertBasicToken(':')">: 分隔</button>
-            <button class="pill-btn" onclick="insertBasicToken('◢')">◢ 暫停顯示</button>
+            <button class="pill-btn" onclick="insertBasicToken('◢')"><span class="disp-tri">&#x25E2;&#xFE0E;</span><span>暫停顯示</span></button>
             <button class="pill-btn" onclick="insertBasicToken('⇒')">⇒ 條件</button>
             <button class="pill-btn" onclick="insertBasicToken('Lbl ')">Lbl</button>
             <button class="pill-btn" onclick="insertBasicToken('Goto ')">Goto</button>
@@ -1214,7 +1359,7 @@
             <button class="pill-btn" onclick="insertBasicToken('Dsz ')">Dsz</button>
             <button class="pill-btn" onclick="insertBasicToken('Isz ')">Isz</button>
           </div>
-          <textarea id="basicEditor" class="code-area" oninput="syncEditorToSlot()" placeholder="支援 Casio Basic 語法：?→A : ?→B : A+B→C : C◢ : A×B"></textarea>
+          <textarea id="basicEditor" class="code-area" spellcheck="false" oninput="syncEditorToSlot()" placeholder="支援 Casio Basic 語法：?→A : ?→B : A+B→C : C◢ : A×B"></textarea>
         </div>
       </div>
 
@@ -1222,11 +1367,11 @@
       <div id="ws-ref" class="ws-section">
         <div class="card-block flex-grow-card" style="margin-bottom: 0;">
           <div class="sec-title">
-            <span>內建速查庫 (01–40 順序排列，點擊直接插入算式，不洗走原算式)</span>
-            <div style="display:flex; gap:4px;">
-              <button class="pill-btn" id="ref-btn-fmla" onclick="renderRefList('FMLA')">23 FMLA 公式</button>
-              <button class="pill-btn" id="ref-btn-const" onclick="renderRefList('CONST')">40 CONST 常數</button>
-              <button class="pill-btn" id="ref-btn-conv" onclick="renderRefList('CONV')">40 CONV 轉換</button>
+            <span>內建速查庫 (01–40 順序排列，點擊直接插入並計算)</span>
+            <div style="display:flex; gap:4px; flex-shrink:0;">
+              <button class="pill-btn" id="ref-btn-fmla" onclick="renderRefList('FMLA')">23 FMLA</button>
+              <button class="pill-btn" id="ref-btn-const" onclick="renderRefList('CONST')">40 CONST</button>
+              <button class="pill-btn" id="ref-btn-conv" onclick="renderRefList('CONV')">40 CONV</button>
             </div>
           </div>
           <div class="ref-grid" id="refGrid"></div>
@@ -1267,12 +1412,16 @@
         const n = expComplex.re;
         if (Math.abs(expComplex.im) < 1e-12 && Number.isInteger(n)) {
           if (n === 0) return new Complex(1, 0);
-          if (n > 0 && n <= 12) {
+          if (n > 0 && n <= 12 && Math.abs(this.im) > 1e-12) {
             let res = new Complex(1, 0);
             for (let k = 0; k < n; k++) res = res.mul(this);
             return res;
           }
           if (n === -1) return new Complex(1, 0).div(this);
+        }
+        if (Math.abs(this.im) < 1e-12 && Math.abs(expComplex.im) < 1e-12) {
+          if (this.re < 0 && !Number.isInteger(n)) throw new Error('Math ERROR');
+          return new Complex(Math.pow(this.re, n), 0);
         }
         const r = Math.pow(this.abs(), n);
         const th = this.arg() * n;
@@ -1375,6 +1524,18 @@
       '40': { lbl: 'cal►J', fn: x => x * 4.1858 }
     };
 
+    const REV_CONST_MAP = {};
+    Object.entries(CONST_DATA).forEach(([code, obj]) => {
+      REV_CONST_MAP[obj.sym] = `CONST_${code}`;
+    });
+
+    const REV_CONV_MAP = {};
+    Object.entries(CONV_DATA).forEach(([code, obj]) => {
+      REV_CONV_MAP[obj.lbl] = `CONV_${code}`;
+    });
+    const SORTED_CONV_LBLS = Object.keys(REV_CONV_MAP).sort((a, b) => b.length - a.length);
+    const SORTED_CONST_SYMS = Object.keys(REV_CONST_MAP).sort((a, b) => b.length - a.length);
+
     // =========================================================================
     // 4. 真機完整 23 條內建公式 (FMLA 01 - 23)
     // =========================================================================
@@ -1456,7 +1617,7 @@
         const xl = w * L;
         const xc = 1 / (w * C);
         return [{ label: 'Z=', val: Math.hypot(R, xl - xc) }];
-      },
+      }},
       '21': { name: '21:Lens Eq', desc: '薄透鏡成像距離 b', vars: ['a', 'f'], execute: ({ a, f }) => [
         { label: 'b=', val: (a * f) / (a - f) }
       ]},
@@ -1466,10 +1627,10 @@
       '23': { name: '23:Ideal Gas', desc: '理想氣體狀態方程 PV=nRT', vars: ['n', 'T', 'V'], execute: ({ n, T, V }) => [
         { label: 'P=', val: (n * 8.3144621 * T) / V }
       ]}
-    }};
+    };
 
     // =========================================================================
-    // 5. DSE 程式池 (Program Pool — 全部附帶真實可執行 Casio Basic 源碼)
+    // 5. DSE 程式池 (Program Pool)
     // =========================================================================
     const PROGRAM_POOL = [
       {
@@ -1526,7 +1687,7 @@
         tag: 'M1',
         title: '二項分佈 P(X=k)',
         doc: 'X~B(N, p)：輸入試驗次數 A (N)、成功機率 B (p)、成功次數 X (k)，輸出 P(X=k)。',
-        basicCode: '?→A : ?→B : ?→X : (A nCr X)×B^X×(1-B)^(A-X)'
+        basicCode: '?→A : ?→B : ?→X : (A nCr X)×B^(X)×(1-B)^(A-X)'
       },
       {
         id: 'det3',
@@ -1551,6 +1712,16 @@
       }
     ];
 
+    const EMPTY_SLOT_TEMPLATE = {
+      id: 'empty',
+      tag: 'Empty',
+      title: '(空置插槽)',
+      doc: '此程式槽目前為空，可從下方程式庫拖放安裝，或直接在編輯器輸入代碼。',
+      basicCode: ''
+    };
+
+    const SLOTS_STORAGE_KEY = 'CASIO_FX50FH_II_SLOTS_V4';
+
     // =========================================================================
     // 6. 計算機全域狀態 (State)
     // =========================================================================
@@ -1559,7 +1730,7 @@
       mode: 'COMP',
       baseType: 'd',
       angle: 'D',
-      roundMode: 'NORM', // 'FIX', 'SCI', 'NORM'
+      roundMode: 'NORM',
       roundDigits: 1,
       tokens: [],
       cursor: 0,
@@ -1596,10 +1767,8 @@
       progInputs: {},
       progOutputs: [],
       progOutIdx: 0,
-      // P1 - P4 Slots
       activeSlotIdx: 1,
       slots: {},
-      // Casio Basic Interpreter State
       basicStmts: [],
       basicPc: 0,
       basicWaitingVar: null,
@@ -1611,15 +1780,37 @@
       auditTape: []
     };
 
-    function initDefaultSlots() {
-      S.slots = {
-        1: { ...PROGRAM_POOL[0] },
-        2: { ...PROGRAM_POOL[1] },
-        3: { ...PROGRAM_POOL[2] },
-        4: { ...PROGRAM_POOL[3] }
-      };
+    function saveSlotsToStorage() {
+      try {
+        localStorage.setItem(SLOTS_STORAGE_KEY, JSON.stringify(S.slots));
+      } catch (e) {}
     }
-    initDefaultSlots();
+
+    function loadSlotsFromStorage() {
+      try {
+        const raw = localStorage.getItem(SLOTS_STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && parsed[1] && parsed[2] && parsed[3] && parsed[4]) {
+            S.slots = parsed;
+            return;
+          }
+        }
+      } catch (e) {}
+      initDefaultSlots();
+    }
+
+    function initDefaultSlots() {
+      const simulProg = PROGRAM_POOL.find(p => p.id === 'simul') || PROGRAM_POOL[1];
+      S.slots = {
+        1: { ...simulProg },
+        2: { ...EMPTY_SLOT_TEMPLATE },
+        3: { ...EMPTY_SLOT_TEMPLATE },
+        4: { ...EMPTY_SLOT_TEMPLATE }
+      };
+      saveSlotsToStorage();
+    }
+    loadSlotsFromStorage();
 
     // =========================================================================
     // 7. 基礎數學與格式化輔助函數
@@ -1636,7 +1827,7 @@
     }
     function cleanNum(n) {
       if (typeof n !== 'number' || !Number.isFinite(n)) return n;
-      if (Math.abs(n) < 1e-12) return 0;
+      if (Math.abs(n) === 0) return 0;
       return Number(n.toPrecision(12));
     }
     function calcFactorial(n) {
@@ -1662,6 +1853,9 @@
     }
 
     function getFractionComponents(val) {
+      if (!Number.isFinite(val)) return null;
+      if (Math.abs(val) > 0 && Math.abs(val) < 1e-6) return null;
+      if (Math.abs(val) >= 1e9) return null;
       if (Math.abs(val - Math.round(val)) < 1e-9) {
         return { sign: val < 0 ? -1 : 1, intPart: Math.abs(Math.round(val)), num: 0, den: 1 };
       }
@@ -1729,7 +1923,7 @@
     function formatConstValueForRef(val) {
       if (Math.abs(val) >= 1e6 || (Math.abs(val) > 0 && Math.abs(val) < 1e-3)) {
         const [m, e] = val.toExponential(4).split('e');
-        return `${parseFloat(m)}×10^${parseInt(e, 10)}`;
+        return `${parseFloat(m)}e${parseInt(e, 10)}`;
       }
       return String(val);
     }
@@ -1831,7 +2025,7 @@
     }
 
     // =========================================================================
-    // 8. 原子 Token 語法分析器 (修復 nPr/nCr 與變數 C 撞名問題)
+    // 8. 原子 Token 語法分析器 (完整支援 CONST, CONV, ^( 連帶括號冪次運算)
     // =========================================================================
     const PAREN_FUNCTIONS = [
       'sin(', 'cos(', 'tan(', 'sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(',
@@ -1936,7 +2130,7 @@
 
     function evaluateTokens(rawTokens) {
       if (!rawTokens || rawTokens.length === 0) {
-        return { c: new Complex(S.ansVal, 0), hasFrac: false, hasDms: false };
+        return { c: new Complex(S.ansVal, 0), hasFrac: false, hasDms: false, polarFlag: false, rectFlag: false };
       }
 
       let assignTarget = null;
@@ -1946,6 +2140,23 @@
         if (/^[A-FXYM]$/.test(vCandidate)) {
           assignTarget = vCandidate;
           workingTokens = workingTokens.slice(0, -2);
+        }
+      }
+
+      let polarFlag = false;
+      let rectFlag = false;
+      while (workingTokens.length > 0) {
+        const lastTk = workingTokens[workingTokens.length - 1];
+        if (lastTk === '►r∠θ') {
+          polarFlag = true;
+          rectFlag = false;
+          workingTokens.pop();
+        } else if (lastTk === '►a+bi') {
+          rectFlag = true;
+          polarFlag = false;
+          workingTokens.pop();
+        } else {
+          break;
         }
       }
 
@@ -1965,21 +2176,30 @@
         if (opens > closes) jsExpr += ')'.repeat(opens - closes);
         const val = Function(`"use strict"; return (${jsExpr});`)() | 0;
         if (assignTarget) S.vars[assignTarget] = val;
-        return { c: new Complex(val, 0), hasFrac: false, hasDms: false };
+        return { c: new Complex(val, 0), hasFrac: false, hasDms: false, polarFlag: false, rectFlag: false };
+      }
+
+      const expandedTokens = [];
+      for (const tk of workingTokens) {
+        if (tk === '^(') {
+          expandedTokens.push('^', '(');
+        } else {
+          expandedTokens.push(tk);
+        }
       }
 
       const lexed = [];
       let hasFrac = false;
       let hasDms = false;
       let i = 0;
-      while (i < workingTokens.length) {
-        const t = workingTokens[i];
+      while (i < expandedTokens.length) {
+        const t = expandedTokens[i];
         if (/^[0-9.]$/.test(t)) {
           let numStr = '', dotCount = 0;
-          while (i < workingTokens.length && /^[0-9.]$/.test(workingTokens[i])) {
-            if (workingTokens[i] === '.') dotCount++;
+          while (i < expandedTokens.length && /^[0-9.]$/.test(expandedTokens[i])) {
+            if (expandedTokens[i] === '.') dotCount++;
             if (dotCount > 1) throw new Error('Syntax ERROR');
-            numStr += workingTokens[i];
+            numStr += expandedTokens[i];
             i++;
           }
           const val = parseFloat(numStr);
@@ -2001,17 +2221,24 @@
         }
         if (t.startsWith('CONST_')) {
           const code = t.slice(6);
+          if (!CONST_DATA[code]) throw new Error('Syntax ERROR');
           lexed.push({ type: 'VAL', val: new Complex(CONST_DATA[code].val, 0) });
           i++;
           continue;
         }
         if (t.startsWith('CONV_')) {
           const code = t.slice(5);
+          if (!CONV_DATA[code]) throw new Error('Syntax ERROR');
           lexed.push({ type: 'POST_OP', op: t, convFn: CONV_DATA[code].fn });
           i++;
           continue;
         }
-        // 修正位置 3：二元運算子改檢查 nPr, nCr，避免撞名記憶變數 C
+        if (t === '^(') {
+          lexed.push({ type: 'BIN_OP', op: '^' });
+          lexed.push({ type: 'LPAREN' });
+          i++;
+          continue;
+        }
         if (['+', '-', '×', '÷', '^', 'ˣ√', '×10^', 'nPr', 'nCr', '∠', '=', '≠', '>', '<', '≥', '≤'].includes(t)) {
           lexed.push({ type: 'BIN_OP', op: t });
           i++;
@@ -2035,7 +2262,7 @@
           lexed.push({ type: 'VAL', val: new Complex(map[t] || 0, 0) });
         } else if (PAREN_FUNCTIONS.includes(t)) {
           lexed.push({ type: 'PAREN_FN', fn: t.slice(0, -1) });
-        } else if (['sin', 'cos', 'tan', 'sin⁻¹', 'cos⁻¹', 'tan⁻¹', 'sinh', 'cosh', 'tanh', 'sinh⁻¹', 'cosh⁻¹', 'tanh⁻¹', 'log', 'ln', '10^', 'e^', '√', '³√', 'sin ', 'cos ', 'tan ', 'log ', 'ln '].includes(t)) {
+        } else if (['sin', 'cos', 'tan', 'sin⁻¹', 'cos⁻¹', 'tan⁻¹', 'sinh', 'cosh', 'tanh', 'sinh⁻¹', 'cosh⁻¹', 'tanh⁻¹', 'log', 'ln', '10^', 'e^', '√', '³√', 'Abs', 'arg', 'Conjg', 'Rnd'].includes(t.trim())) {
           lexed.push({ type: 'PRE_FN', fn: t.trim() });
         } else if (['²', '³', '⁻¹', '!', '%', '►r∠θ', '►a+bi'].includes(t)) {
           lexed.push({ type: 'POST_OP', op: t });
@@ -2051,78 +2278,67 @@
         i++;
       }
 
-      // 合併度分秒 (DMS: d° m’ s” 或 d° m’ 或 d°)
+      // 合併度分秒 (DMS)
       const dmsMerged = [];
-      for (let j = 0; j < lexed.length; j++) {
-        if (
-          j + 5 < lexed.length &&
-          lexed[j].type === 'NUM' && lexed[j + 1].type === 'DMS_SEP' &&
-          lexed[j + 2].type === 'NUM' && lexed[j + 3].type === 'DMS_SEP' &&
-          lexed[j + 4].type === 'NUM' && lexed[j + 5].type === 'DMS_SEP'
-        ) {
-          const d = lexed[j].val.re, m = lexed[j + 2].val.re, s = lexed[j + 4].val.re;
-          dmsMerged.push({ type: 'NUM', val: new Complex(d + m / 60 + s / 3600, 0) });
-          j += 5;
-        } else if (
-          j + 3 < lexed.length &&
-          lexed[j].type === 'NUM' && lexed[j + 1].type === 'DMS_SEP' &&
-          lexed[j + 2].type === 'NUM' && lexed[j + 3].type === 'DMS_SEP'
-        ) {
-          const d = lexed[j].val.re, m = lexed[j + 2].val.re;
-          dmsMerged.push({ type: 'NUM', val: new Complex(d + m / 60, 0) });
-          j += 3;
-        } else if (
-          j + 1 < lexed.length &&
-          lexed[j].type === 'NUM' && lexed[j + 1].type === 'DMS_SEP'
-        ) {
-          dmsMerged.push(lexed[j]);
-          j += 1;
-        } else if (lexed[j].type === 'DMS_SEP') {
-          if (dmsMerged.length > 0 && dmsMerged[dmsMerged.length - 1].type === 'NUM') {
-            // 已處理度數數值，忽略多餘 DMS_SEP 標記
-          } else {
-            throw new Error('Syntax ERROR');
+      let j = 0;
+      while (j < lexed.length) {
+        if (lexed[j].type === 'NUM' && j + 1 < lexed.length && lexed[j + 1].type === 'DMS_SEP') {
+          let deg = lexed[j].val.re;
+          let min = 0;
+          let sec = 0;
+          j += 2;
+          if (j + 1 < lexed.length && lexed[j].type === 'NUM' && lexed[j + 1].type === 'DMS_SEP') {
+            min = lexed[j].val.re;
+            j += 2;
+            if (j + 1 < lexed.length && lexed[j].type === 'NUM' && lexed[j + 1].type === 'DMS_SEP') {
+              sec = lexed[j].val.re;
+              j += 2;
+            }
           }
+          dmsMerged.push({ type: 'NUM', val: new Complex(deg + min / 60 + sec / 3600, 0) });
+        } else if (lexed[j].type === 'DMS_SEP') {
+          throw new Error('Syntax ERROR');
         } else {
           dmsMerged.push(lexed[j]);
+          j++;
         }
       }
 
       // 合併分數 (a⌟b⌟c 或 b⌟c)
       const fracMerged = [];
-      for (let j = 0; j < dmsMerged.length; j++) {
+      for (let k = 0; k < dmsMerged.length; k++) {
         if (
-          j + 4 < dmsMerged.length &&
-          dmsMerged[j].type === 'NUM' && dmsMerged[j + 1].type === 'FRAC_SEP' &&
-          dmsMerged[j + 2].type === 'NUM' && dmsMerged[j + 3].type === 'FRAC_SEP' &&
-          dmsMerged[j + 4].type === 'NUM'
+          k + 4 < dmsMerged.length &&
+          dmsMerged[k].type === 'NUM' && dmsMerged[k + 1].type === 'FRAC_SEP' &&
+          dmsMerged[k + 2].type === 'NUM' && dmsMerged[k + 3].type === 'FRAC_SEP' &&
+          dmsMerged[k + 4].type === 'NUM'
         ) {
-          const a = dmsMerged[j].val.re, b = dmsMerged[j + 2].val.re, c = dmsMerged[j + 4].val.re;
+          const a = dmsMerged[k].val.re, b = dmsMerged[k + 2].val.re, c = dmsMerged[k + 4].val.re;
           if (c === 0) throw new Error('Math ERROR');
           fracMerged.push({ type: 'NUM', val: new Complex(a + b / c, 0) });
-          j += 4;
+          k += 4;
         } else if (
-          j + 2 < dmsMerged.length &&
-          dmsMerged[j].type === 'NUM' && dmsMerged[j + 1].type === 'FRAC_SEP' &&
-          dmsMerged[j + 2].type === 'NUM'
+          k + 2 < dmsMerged.length &&
+          dmsMerged[k].type === 'NUM' && dmsMerged[k + 1].type === 'FRAC_SEP' &&
+          dmsMerged[k + 2].type === 'NUM'
         ) {
-          const b = dmsMerged[j].val.re, c = dmsMerged[j + 2].val.re;
+          const b = dmsMerged[k].val.re, c = dmsMerged[k + 2].val.re;
           if (c === 0) throw new Error('Math ERROR');
           fracMerged.push({ type: 'NUM', val: new Complex(b / c, 0) });
-          j += 2;
-        } else if (dmsMerged[j].type === 'FRAC_SEP') {
+          k += 2;
+        } else if (dmsMerged[k].type === 'FRAC_SEP') {
           throw new Error('Syntax ERROR');
         } else {
-          fracMerged.push(dmsMerged[j]);
+          fracMerged.push(dmsMerged[k]);
         }
       }
 
       const stream = [];
-      for (let j = 0; j < fracMerged.length; j++) {
-        const curr = fracMerged[j];
+      for (let k = 0; k < fracMerged.length; k++) {
+        const curr = fracMerged[k];
         stream.push(curr);
-        if (j + 1 < fracMerged.length) {
-          const next = fracMerged[j + 1];
+        if (k + 1 < fracMerged.length) {
+          const next = fracMerged[k + 1];
           const leftIsVal = ['NUM', 'VAL', 'RPAREN', 'POST_OP'].includes(curr.type);
           const rightIsVal = ['NUM', 'VAL', 'LPAREN', 'PRE_FN', 'PAREN_FN'].includes(next.type);
           if (leftIsVal && rightIsVal) {
@@ -2131,7 +2347,7 @@
         }
       }
 
-      let pos = 0, polarFlag = false;
+      let pos = 0;
       function peek() { return stream[pos] || null; }
       function consume() { return stream[pos++]; }
 
@@ -2242,9 +2458,15 @@
           else if (op === '%') {
             val = new Complex(val.re / 100, val.im / 100);
             val.isPercent = true;
-          } else if (op === '►r∠θ') polarFlag = true;
-          else if (op === '►a+bi') polarFlag = false;
-          else if (tk.convFn) val = new Complex(tk.convFn(val.re), 0);
+          } else if (op === '►r∠θ') {
+            polarFlag = true;
+            rectFlag = false;
+          } else if (op === '►a+bi') {
+            rectFlag = true;
+            polarFlag = false;
+          } else if (tk.convFn) {
+            val = new Complex(tk.convFn(val.re), 0);
+          }
         }
         return val;
       }
@@ -2279,11 +2501,11 @@
       const finalComplex = parseCompare();
       if (pos < stream.length) throw new Error('Syntax ERROR');
       if (assignTarget) S.vars[assignTarget] = cleanNum(finalComplex.re);
-      return { c: finalComplex, hasFrac, hasDms, polarFlag };
+      return { c: finalComplex, hasFrac, hasDms, polarFlag, rectFlag };
     }
 
     // =========================================================================
-    // 9. 強化版 Casio Basic 直譯器 (修復 nCr 轉譯與 sin 30 無括號格式)
+    // 9. 強化版 Casio Basic 直譯器
     // =========================================================================
     function tokenizeBasicString(str) {
       let s = str.trim()
@@ -2296,15 +2518,19 @@
         .replace(/<=/g, '≤')
         .replace(/sqrt\(/gi, '√(');
 
-      // 自動將編輯器打的 ' nCr ' / ' nPr ' 或數字間的 C / P 轉回內部 Token
+      s = s.replace(/\s+nCr\s+/gi, 'nCr').replace(/\s+nPr\s+/gi, 'nPr');
       s = s.replace(/\bnCr\b/gi, 'nCr').replace(/\bnPr\b/gi, 'nPr');
+      s = s.replace(/(\d|\)|[A-FXYM])\s+C\s+(\d|\(|[A-FXYM])/g, '$1nCr$2');
+      s = s.replace(/(\d|\)|[A-FXYM])\s+P\s+(\d|\(|[A-FXYM])/g, '$1nPr$2');
       s = s.replace(/(\d|\))\s*C\s*(\d|\()/g, '$1nCr$2');
       s = s.replace(/(\d|\))\s*P\s*(\d|\()/g, '$1nPr$2');
 
       const multiTokens = [
         ...PAREN_FUNCTIONS,
+        '^(' ,
         'sinh⁻¹', 'cosh⁻¹', 'tanh⁻¹', 'sin⁻¹', 'cos⁻¹', 'tan⁻¹',
         'sinh', 'cosh', 'tanh', 'sin', 'cos', 'tan', 'log', 'ln',
+        'Abs', 'arg', 'Conjg', 'Rnd',
         '10^', 'e^', '³√', 'ˣ√', '×10^', '►r∠θ', '►a+bi', 'Ans', 'Ran#',
         'nPr', 'nCr'
       ].sort((a, b) => b.length - a.length);
@@ -2314,23 +2540,49 @@
       while (i < s.length) {
         if (s[i] === ' ') { i++; continue; }
 
-        const constMatch = s.slice(i).match(/^(CONST_[0-9]{2}|CONV_[0-9]{2})/);
-        if (constMatch) {
-          out.push(constMatch[1]);
-          i += constMatch[1].length;
+        const internalMatch = s.slice(i).match(/^(CONST_[0-9]{2}|CONV_[0-9]{2})/);
+        if (internalMatch) {
+          out.push(internalMatch[1]);
+          i += internalMatch[1].length;
           continue;
         }
 
-        let matched = false;
+        let convMatched = false;
+        for (const lbl of SORTED_CONV_LBLS) {
+          if (s.startsWith(lbl, i)) {
+            out.push(REV_CONV_MAP[lbl]);
+            i += lbl.length;
+            convMatched = true;
+            break;
+          }
+        }
+        if (convMatched) continue;
+
+        let fnMatched = false;
         for (const w of multiTokens) {
           if (s.startsWith(w, i)) {
             out.push(w);
             i += w.length;
-            matched = true;
+            fnMatched = true;
             break;
           }
         }
-        if (matched) continue;
+        if (fnMatched) continue;
+
+        let constMatched = false;
+        for (const sym of SORTED_CONST_SYMS) {
+          if (s.startsWith(sym, i)) {
+            if (sym === 'e' || sym === 'F') continue;
+            const nextCh = s[i + sym.length] || '';
+            if (/^[a-zA-Z0-9_]$/.test(nextCh) && /^[a-zA-Z0-9_]+$/.test(sym)) continue;
+            out.push(REV_CONST_MAP[sym]);
+            i += sym.length;
+            constMatched = true;
+            break;
+          }
+        }
+        if (constMatched) continue;
+
         out.push(s[i]);
         i++;
       }
@@ -2522,7 +2774,8 @@
           continue;
         }
 
-        const promptMatch = txt.match(/^(?:"([^"]*)"\s*)?\?\s*→\s*([A-FXYM])$/i);
+        const normalizedPromptTxt = txt.replace(/->/g, '→');
+        const promptMatch = normalizedPromptTxt.match(/^(?:"([^"]*)"\s*)?\?\s*→\s*([A-FXYM])$/i);
         if (promptMatch) {
           const customLbl = promptMatch[1];
           const vName = promptMatch[2].toUpperCase();
@@ -2532,20 +2785,26 @@
           S.resText = formatNumber(S.vars[vName] || 0);
           S.tokens = [];
           S.cursor = 0;
+          S.isEvaluated = false;
           render();
           return;
         }
 
         try {
           const tks = tokenizeBasicString(txt);
-          const { c, hasFrac, hasDms } = evaluateTokens(tks);
+          const { c, hasFrac, hasDms, polarFlag } = evaluateTokens(tks);
           S.lastComplex = c;
           S.ansVal = cleanNum(c.re);
           S.rawNum = cleanNum(c.re);
-          S.topOverride = txt;
+          S.topOverride = tks.map(formatTokenForDisplay).join('');
           S.promptText = '';
           const activeFrac = hasFrac ? S.preferredFracStyle : 0;
-          S.resText = hasDms ? formatDmsString(c.re) : formatAsFraction(c.re, activeFrac);
+          if (S.mode === 'CMPLX' || Math.abs(c.im) > 1e-11 || polarFlag) {
+            S.complexView = polarFlag ? 3 : (S.cmplxDisplayStyle === 'DEFAULT' ? 1 : 0);
+            S.resText = formatComplex(c, S.complexView, activeFrac);
+          } else {
+            S.resText = hasDms ? formatDmsString(c.re) : formatAsFraction(c.re, activeFrac);
+          }
           S.isEvaluated = true;
           S.basicPc++;
 
@@ -2569,7 +2828,7 @@
     }
 
     // =========================================================================
-    // 10. 顯示屏渲染與工作台更新 (修正顯示轉譯)
+    // 10. 顯示屏渲染與工作台更新
     // =========================================================================
     function formatTokenForDisplay(t) {
       if (t.startsWith('CONST_')) return CONST_DATA[t.slice(6)].sym;
@@ -2605,6 +2864,17 @@
       const popSd = Math.sqrt(Math.max(0, sx2 / n - mean * mean));
       const sampSd = n > 1 ? Math.sqrt(Math.max(0, (sx2 - n * mean * mean) / (n - 1))) : 0;
       return { n, sx, sx2, mean: cleanNum(mean), popSd: cleanNum(popSd), sampSd: cleanNum(sampSd) };
+    }
+
+    function previewConstantOrExprValue() {
+      if (S.tokens.length === 0) return;
+      try {
+        const { c, hasFrac, hasDms } = evaluateTokens(S.tokens);
+        if (Number.isFinite(c.re)) {
+          const activeFrac = hasFrac ? S.preferredFracStyle : 0;
+          S.resText = hasDms ? formatDmsString(c.re) : formatAsFraction(c.re, activeFrac);
+        }
+      } catch (e) {}
     }
 
     function render() {
@@ -2649,7 +2919,7 @@
       document.getElementById('ind-R').classList.toggle('on', S.angle === 'R');
       document.getElementById('ind-G').classList.toggle('on', S.angle === 'G');
 
-      const hasIm = S.isEvaluated && S.lastComplex && (S.mode === 'CMPLX' || Math.abs(S.lastComplex.im) > 1e-11);
+      const hasIm = S.isEvaluated && S.lastComplex && (S.mode === 'CMPLX' || Math.abs(S.lastComplex.im) > 1e-11 || S.complexView === 3 || S.complexView === 4);
       document.getElementById('ind-REIM').classList.toggle('on', Boolean(hasIm));
 
       ['COMP', 'CMPLX', 'SD', 'BASE'].forEach(m => {
@@ -2663,7 +2933,7 @@
       if (memEl) {
         memEl.innerHTML = ['A', 'B', 'C', 'D', 'E', 'F', 'X', 'Y', 'M', 'Ans'].map(k => {
           const rawVal = k === 'Ans' ? cleanNum(S.ansVal) : cleanNum(S.vars[k] || 0);
-          const val = typeof rawVal === 'number' ? (Math.abs(rawVal) >= 1e7 ? rawVal.toPrecision(7) : rawVal) : rawVal;
+          const val = typeof rawVal === 'number' ? ((Math.abs(rawVal) >= 1e7 || (Math.abs(rawVal) > 0 && Math.abs(rawVal) < 1e-4)) ? rawVal.toPrecision(5) : rawVal) : rawVal;
           return `<div class="mem-chip" onclick="quickRecall('${k}')" title="點擊插入 ${k}"><b>${k}</b><span>${val}</span></div>`;
         }).join('');
       }
@@ -2802,25 +3072,36 @@
         const codes = Object.keys(CONST_DATA).sort();
         const curCode = S.pickerBuf.length === 2 ? S.pickerBuf : codes[S.pickerScrollIdx % codes.length];
         const cObj = CONST_DATA[curCode];
-        up.innerHTML = `Const No.? [${S.pickerBuf || curCode}]`;
+        const curExpr = S.tokens.length > 0 && !S.isEvaluated ? S.tokens.map(formatTokenForDisplay).join('') + ' ' : '';
+        up.innerHTML = `${safe(curExpr)}Const?[${S.pickerBuf || curCode}]`;
         pm.innerText = cObj ? `${curCode}:${cObj.sym}` : '';
-        lw.innerText = cObj ? formatConstValueForRef(cObj.val) : '01-40';
+        lw.innerText = cObj ? formatNumber(cObj.val) : '01-40';
         return;
       }
       if (S.interactive === 'CONV_PICK') {
         const codes = Object.keys(CONV_DATA).sort();
         const curCode = S.pickerBuf.length === 2 ? S.pickerBuf : codes[S.pickerScrollIdx % codes.length];
         const cvObj = CONV_DATA[curCode];
-        up.innerHTML = `Conv No.? [${S.pickerBuf || curCode}]`;
+        const curExpr = S.tokens.length > 0 && !S.isEvaluated ? S.tokens.map(formatTokenForDisplay).join('') + ' ' : '';
+        up.innerHTML = `${safe(curExpr)}Conv?[${S.pickerBuf || curCode}]`;
         pm.innerText = '';
         lw.innerText = cvObj ? `${curCode}:${cvObj.lbl}` : '01-40';
         return;
       }
       if (S.interactive === 'BASIC_PROMPT') {
         const slotObj = S.slots[S.activeSlotIdx];
-        up.innerText = S.tokens.length > 0 ? S.tokens.map(formatTokenForDisplay).join('') : (slotObj ? `P${S.activeSlotIdx}:${slotObj.title}` : 'Program');
+        if (S.tokens.length > 0) {
+          const dispTokens = S.tokens.map(formatTokenForDisplay);
+          const leftStr = dispTokens.slice(0, S.cursor).join('');
+          const rightStr = dispTokens.slice(S.cursor).join('');
+          const curClass = S.insMode ? 'cursor-ins' : 'cursor-blink';
+          up.innerHTML = `${safe(leftStr)}<span class="${curClass}">_</span>${safe(rightStr)}`;
+          lw.innerText = dispTokens.join('');
+        } else {
+          up.innerText = slotObj && slotObj.id !== 'empty' ? `P${S.activeSlotIdx}:${slotObj.title}` : 'Input?';
+          lw.innerText = S.resText;
+        }
         pm.innerText = S.promptText;
-        lw.innerText = S.tokens.length > 0 ? S.tokens.map(formatTokenForDisplay).join('') : S.resText;
         return;
       }
       if (S.interactive === 'FMLA_RUN') {
@@ -2850,24 +3131,31 @@
     }
 
     // =========================================================================
-    // 11. P1–P4 拖放插槽 (Drag & Drop) 與程式池管理
+    // 11. P1–P4 程式槽與跨平台 PointerEvents 拖放系統
     // =========================================================================
-    function renderSlotsAndPool() {
+    let ptrDragState = null;
+
+    function renderSlotsAndPool(flashSlotIdx = null) {
       const slotGrid = document.getElementById('slotGrid');
       if (slotGrid) {
         slotGrid.innerHTML = [1, 2, 3, 4].map(idx => {
-          const p = S.slots[idx];
+          const p = S.slots[idx] || EMPTY_SLOT_TEMPLATE;
           const isAct = S.activeSlotIdx === idx;
+          const flashCls = flashSlotIdx === idx ? 'flash-success' : '';
           return `
-            <div class="slot-card ${isAct ? 'active-slot' : ''}"
+            <div class="slot-card ${isAct ? 'active-slot' : ''} ${flashCls}"
+                 data-slot-idx="${idx}"
                  onclick="selectSlot(${idx})"
                  ondragover="onSlotDragOver(event, ${idx})"
                  ondragleave="onSlotDragLeave(event)"
                  ondrop="onSlotDrop(event, ${idx})"
                  id="slot-card-${idx}">
               <div class="slot-hdr">
-                <span>Slot P${idx} (${p.tag})</span>
-                <button class="slot-run-btn" onclick="event.stopPropagation(); executeSlot(${idx})" title="立即執行 P${idx}">▶</button>
+                <span>P${idx} (${p.tag})</span>
+                <div class="slot-actions">
+                  <button class="slot-clear-btn" onclick="event.stopPropagation(); clearSlot(${idx})" title="清空 P${idx}">✕</button>
+                  <button class="slot-run-btn" onclick="event.stopPropagation(); executeSlot(${idx})" title="立即執行 P${idx}">▶</button>
+                </div>
               </div>
               <div class="slot-title">${p.title}</div>
             </div>
@@ -2879,11 +3167,12 @@
       if (poolGrid) {
         poolGrid.innerHTML = PROGRAM_POOL.map(item => `
           <div class="pool-item"
+               data-pool-id="${item.id}"
                draggable="true"
                ondragstart="onPoolDragStart(event, '${item.id}')"
-               onclick="assignPoolItemToActiveSlot('${item.id}')"
+               onpointerdown="onPoolPointerDown(event, '${item.id}')"
                ondblclick="event.stopPropagation(); runPoolItemDirect('${item.id}')"
-               title="拖放至上方 P1–P4，或點擊裝入當前選中 Slot，雙擊試跑">
+               title="按住拖放至 P1–P4 安裝 · 單擊載入至選中槽 · 雙擊直接試跑">
             <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.title}</span>
             <span class="pool-tag">${item.tag}</span>
           </div>
@@ -2893,19 +3182,125 @@
       updateEditorFromActiveSlot();
     }
 
+    function installProgramToSlot(idx, poolItem) {
+      S.slots[idx] = { ...poolItem };
+      S.activeSlotIdx = idx;
+      saveSlotsToStorage();
+      renderSlotsAndPool(idx);
+      const ed = document.getElementById('basicEditor');
+      if (ed) ed.value = S.slots[idx].basicCode;
+    }
+
+    function clearSlot(idx) {
+      S.slots[idx] = { ...EMPTY_SLOT_TEMPLATE };
+      S.activeSlotIdx = idx;
+      saveSlotsToStorage();
+      renderSlotsAndPool();
+      const ed = document.getElementById('basicEditor');
+      if (ed) ed.value = '';
+    }
+
+    function onPoolPointerDown(e, poolId) {
+      if (e.button !== undefined && e.button !== 0) return;
+      const item = PROGRAM_POOL.find(p => p.id === poolId);
+      if (!item) return;
+
+      const sourceEl = e.currentTarget;
+      ptrDragState = {
+        poolId,
+        item,
+        sourceEl,
+        startX: e.clientX,
+        startY: e.clientY,
+        isDragging: false,
+        ghostEl: null,
+        hoveredSlotIdx: null
+      };
+
+      window.addEventListener('pointermove', onGlobalPointerMove, { passive: false });
+      window.addEventListener('pointerup', onGlobalPointerUp);
+      window.addEventListener('pointercancel', onGlobalPointerUp);
+    }
+
+    function onGlobalPointerMove(e) {
+      if (!ptrDragState) return;
+      const dx = e.clientX - ptrDragState.startX;
+      const dy = e.clientY - ptrDragState.startY;
+
+      if (!ptrDragState.isDragging && Math.hypot(dx, dy) > 6) {
+        ptrDragState.isDragging = true;
+        if (ptrDragState.sourceEl) ptrDragState.sourceEl.classList.add('dragging-source');
+        const ghost = document.createElement('div');
+        ghost.className = 'drag-ghost';
+        ghost.innerHTML = `<span>${ptrDragState.item.title}</span><span class="pool-tag">${ptrDragState.item.tag}</span>`;
+        document.body.appendChild(ghost);
+        ptrDragState.ghostEl = ghost;
+      }
+
+      if (ptrDragState.isDragging) {
+        e.preventDefault();
+        ptrDragState.ghostEl.style.left = `${e.clientX}px`;
+        ptrDragState.ghostEl.style.top = `${e.clientY}px`;
+
+        const hitEl = document.elementFromPoint(e.clientX, e.clientY);
+        const slotCard = hitEl ? hitEl.closest('.slot-card') : null;
+        const newHoverIdx = slotCard ? parseInt(slotCard.getAttribute('data-slot-idx'), 10) : null;
+
+        if (ptrDragState.hoveredSlotIdx !== newHoverIdx) {
+          if (ptrDragState.hoveredSlotIdx) {
+            const oldCard = document.getElementById(`slot-card-${ptrDragState.hoveredSlotIdx}`);
+            if (oldCard) oldCard.classList.remove('drag-over');
+          }
+          if (newHoverIdx) {
+            const newCard = document.getElementById(`slot-card-${newHoverIdx}`);
+            if (newCard) newCard.classList.add('drag-over');
+          }
+          ptrDragState.hoveredSlotIdx = newHoverIdx;
+        }
+      }
+    }
+
+    function onGlobalPointerUp(e) {
+      window.removeEventListener('pointermove', onGlobalPointerMove);
+      window.removeEventListener('pointerup', onGlobalPointerUp);
+      window.removeEventListener('pointercancel', onGlobalPointerUp);
+
+      if (!ptrDragState) return;
+      const state = ptrDragState;
+      ptrDragState = null;
+
+      if (state.sourceEl) state.sourceEl.classList.remove('dragging-source');
+      if (state.ghostEl && state.ghostEl.parentNode) {
+        state.ghostEl.parentNode.removeChild(state.ghostEl);
+      }
+      [1, 2, 3, 4].forEach(i => {
+        const c = document.getElementById(`slot-card-${i}`);
+        if (c) c.classList.remove('drag-over');
+      });
+
+      if (state.isDragging) {
+        if (state.hoveredSlotIdx) {
+          installProgramToSlot(state.hoveredSlotIdx, state.item);
+        }
+      } else {
+        installProgramToSlot(S.activeSlotIdx, state.item);
+      }
+    }
+
     function selectSlot(idx) {
       S.activeSlotIdx = idx;
       renderSlotsAndPool();
+      const ed = document.getElementById('basicEditor');
+      if (ed && S.slots[idx]) ed.value = S.slots[idx].basicCode;
     }
 
     function updateEditorFromActiveSlot() {
-      const p = S.slots[S.activeSlotIdx];
-      if (!p) return;
+      const p = S.slots[S.activeSlotIdx] || EMPTY_SLOT_TEMPLATE;
       const lbl = document.getElementById('editorTitleLbl');
       if (lbl) lbl.innerText = `Slot P${S.activeSlotIdx} (${p.title}) — Casio Basic 源碼`;
       const ed = document.getElementById('basicEditor');
       if (ed && document.activeElement !== ed) {
-        ed.value = p.basicCode;
+        ed.value = p.basicCode || '';
       }
       const docEl = document.getElementById('progDocBox');
       if (docEl) docEl.innerHTML = `<b>Slot P${S.activeSlotIdx} (${p.title})</b>：${p.doc}`;
@@ -2915,10 +3310,20 @@
       const ed = document.getElementById('basicEditor');
       if (S.slots[S.activeSlotIdx] && ed) {
         S.slots[S.activeSlotIdx].basicCode = ed.value;
+        if (S.slots[S.activeSlotIdx].id === 'empty' && ed.value.trim()) {
+          S.slots[S.activeSlotIdx].id = 'custom';
+          S.slots[S.activeSlotIdx].tag = 'DIY';
+          S.slots[S.activeSlotIdx].title = '自訂程式';
+        }
+        saveSlotsToStorage();
       }
     }
 
     function onPoolDragStart(e, poolId) {
+      if (ptrDragState) {
+        e.preventDefault();
+        return;
+      }
       e.dataTransfer.setData('text/plain', poolId);
     }
 
@@ -2938,17 +3343,8 @@
       const poolId = e.dataTransfer.getData('text/plain');
       const found = PROGRAM_POOL.find(p => p.id === poolId);
       if (found) {
-        S.slots[idx] = { ...found };
-        S.activeSlotIdx = idx;
-        renderSlotsAndPool();
+        installProgramToSlot(idx, found);
       }
-    }
-
-    function assignPoolItemToActiveSlot(poolId) {
-      const found = PROGRAM_POOL.find(p => p.id === poolId);
-      if (!found) return;
-      S.slots[S.activeSlotIdx] = { ...found };
-      renderSlotsAndPool();
     }
 
     function runPoolItemDirect(poolId) {
@@ -2964,7 +3360,13 @@
       S.activeSlotIdx = idx;
       renderSlotsAndPool();
       const slotObj = S.slots[idx];
-      if (!slotObj || !slotObj.basicCode.trim()) return;
+      if (!slotObj || !slotObj.basicCode || !slotObj.basicCode.trim()) {
+        S.topOverride = `P${idx}: Empty`;
+        S.resText = '0.';
+        S.isEvaluated = true;
+        render();
+        return;
+      }
       if (S.mode !== 'COMP') switchMode('COMP');
       runBasicScriptString(slotObj.basicCode);
     }
@@ -2972,7 +3374,7 @@
     function resetDefaultSlots() {
       initDefaultSlots();
       S.activeSlotIdx = 1;
-      renderSlotsAndPool();
+      renderSlotsAndPool(1);
     }
 
     function saveAndRunActiveSlot() {
@@ -3041,24 +3443,31 @@
       if (type === 'FMLA') {
         grid.innerHTML = sortedEntries(BUILTIN_FMLA).map(([code, f]) => `
           <div class="ref-item" onclick="startFmla('${code}')">
-            <span><b class="ref-code">${code}</b>${f.name.slice(3)}</span>
-            <span style="color:var(--text-muted); font-size:10px;">${f.desc}</span>
+            <div class="ref-left">
+              <span class="ref-code">${code}</span>
+              <span class="ref-sym">${f.name.slice(3)}</span>
+            </div>
+            <span class="ref-name">${f.desc}</span>
           </div>
         `).join('');
       } else if (type === 'CONST') {
         grid.innerHTML = sortedEntries(CONST_DATA).map(([code, c]) => `
-          <div class="ref-item" onclick="pickConst('${code}')" title="${c.name}: ${c.val}">
-            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-              <b class="ref-code">${code}</b><b>${c.sym}</b>
-              <span style="color:var(--text-muted); font-size:10px; margin-left:3px;">${c.name}</span>
-            </span>
+          <div class="ref-item" onclick="pickConst('${code}')" title="點擊插入 ${c.sym} (${c.name} = ${c.val})">
+            <div class="ref-left">
+              <span class="ref-code">${code}</span>
+              <span class="ref-sym">${c.sym}</span>
+              <span class="ref-name">${c.name}</span>
+            </div>
             <span class="const-val-tag">${formatConstValueForRef(c.val)}</span>
           </div>
         `).join('');
       } else if (type === 'CONV') {
         grid.innerHTML = sortedEntries(CONV_DATA).map(([code, c]) => `
-          <div class="ref-item" onclick="pickConv('${code}')">
-            <span><b class="ref-code">${code}</b>${c.lbl}</span>
+          <div class="ref-item" onclick="pickConv('${code}')" title="點擊插入單位轉換 ${c.lbl}">
+            <div class="ref-left">
+              <span class="ref-code">${code}</span>
+              <span class="ref-sym">${c.lbl}</span>
+            </div>
           </div>
         `).join('');
       }
@@ -3066,20 +3475,30 @@
 
     function pickConst(code) {
       if (S.isOff) return;
+      if (S.mode === 'BASE') switchMode('COMP');
       S.interactive = null;
       S.pickerBuf = '';
       addToken(`CONST_${code}`);
+      previewConstantOrExprValue();
+      render();
     }
 
     function pickConv(code) {
       if (S.isOff) return;
+      if (S.mode === 'BASE') switchMode('COMP');
       S.interactive = null;
       S.pickerBuf = '';
+      if (S.tokens.length === 0 && !S.isEvaluated) {
+        S.tokens = ['Ans'];
+        S.cursor = 1;
+      }
       addToken(`CONV_${code}`);
+      previewConstantOrExprValue();
+      render();
     }
 
     // =========================================================================
-    // 13. 按鍵操作處理器 (修正 nPr/nCr 與記憶變數 C)
+    // 13. 按鍵操作處理器
     // =========================================================================
     function switchMode(m) {
       if (S.isOff) return;
@@ -3293,8 +3712,8 @@
       if (S.isOff) return;
       S.topOverride = null;
       S.engExpOffset = null;
-      const autoAnsOps = ['+', '-', '×', '÷', '^', '²', '³', '⁻¹', '!', '%', 'nPr', 'nCr', 'ˣ√', '→', '∠', '►r∠θ', '►a+bi'];
-      if (S.isEvaluated) {
+      const autoAnsOps = ['+', '-', '×', '÷', '^', '^(', '²', '³', '⁻¹', '!', '%', 'nPr', 'nCr', 'ˣ√', '→', '∠', '►r∠θ', '►a+bi'];
+      if (S.isEvaluated && S.interactive !== 'BASIC_PROMPT') {
         S.isEvaluated = false;
         S.promptText = '';
         S.fracMode = 0;
@@ -3305,7 +3724,7 @@
         }
         S.cursor = S.tokens.length;
       } else {
-        if (!S.insMode && S.cursor < S.tokens.length) {
+        if (S.insMode && S.cursor < S.tokens.length) {
           S.tokens.splice(S.cursor, 1, tk);
         } else {
           S.tokens.splice(S.cursor, 0, tk);
@@ -3332,6 +3751,13 @@
       S.stoMode = false;
       S.shift = false;
       S.alpha = false;
+
+      if (!S.isEvaluated && S.tokens.length > 0 && S.tokens[S.cursor - 1] === '?') {
+        addToken('→');
+        addToken(varName);
+        return;
+      }
+
       try {
         let valToStore = S.ansVal;
         let exprDisplay = 'Ans';
@@ -3563,27 +3989,39 @@
         return;
       }
 
-      if (['FMLA_PICK', 'CONST_PICK', 'CONV_PICK'].includes(S.interactive) && /^[0-9]$/.test(k)) {
-        S.pickerBuf += k;
-        if (S.pickerBuf.length === 2) {
-          const code = S.pickerBuf;
-          const modeType = S.interactive;
-          S.pickerBuf = '';
-          if (modeType === 'FMLA_PICK') {
-            startFmla(code);
-          } else if (modeType === 'CONST_PICK') {
-            S.interactive = null;
-            if (CONST_DATA[code]) addToken(`CONST_${code}`);
-            else render();
-          } else if (modeType === 'CONV_PICK') {
-            S.interactive = null;
-            if (CONV_DATA[code]) addToken(`CONV_${code}`);
-            else render();
+      if (['FMLA_PICK', 'CONST_PICK', 'CONV_PICK'].includes(S.interactive)) {
+        if (/^[0-9]$/.test(k)) {
+          S.pickerBuf += k;
+          if (S.pickerBuf.length === 2) {
+            const code = S.pickerBuf;
+            const modeType = S.interactive;
+            S.pickerBuf = '';
+            if (modeType === 'FMLA_PICK') {
+              startFmla(code);
+            } else if (modeType === 'CONST_PICK') {
+              if (CONST_DATA[code]) pickConst(code);
+              else { S.interactive = null; render(); }
+            } else if (modeType === 'CONV_PICK') {
+              if (CONV_DATA[code]) pickConv(code);
+              else { S.interactive = null; render(); }
+            }
+          } else {
+            render();
           }
-        } else {
-          render();
+          return;
+        } else if (S.interactive === 'CONST_PICK' || S.interactive === 'CONV_PICK') {
+          const modeType = S.interactive;
+          const codes = Object.keys(modeType === 'CONST_PICK' ? CONST_DATA : CONV_DATA).sort();
+          const curCode = S.pickerBuf.length === 2 ? S.pickerBuf : codes[S.pickerScrollIdx % codes.length];
+          if (modeType === 'CONST_PICK' && CONST_DATA[curCode]) {
+            pickConst(curCode);
+          } else if (modeType === 'CONV_PICK' && CONV_DATA[curCode]) {
+            pickConv(curCode);
+          } else {
+            S.interactive = null;
+            S.pickerBuf = '';
+          }
         }
-        return;
       }
 
       if (S.mode === 'BASE' && !S.shift && !S.alpha) {
@@ -3615,7 +4053,6 @@
       S.shift = false;
       S.hyp = false;
 
-      // 修正位置 1：將 nPr / nCr 的內部 Token 設為 'nPr' 與 'nCr'
       if (isShift) {
         if (k === '7') {
           S.interactive = 'CONST_PICK';
@@ -3685,13 +4122,33 @@
         if (k === 'MUL') { addToken('nPr'); return; }
         if (k === 'DIV') { addToken('nCr'); return; }
         if (k === 'ADD') {
-          if (S.mode === 'CMPLX') addToken('►r∠θ');
-          else addToken('Pol(');
+          if (S.mode === 'CMPLX') {
+            if (S.isEvaluated && S.lastComplex) {
+              S.complexView = 3;
+              S.topOverride = `${S.tokens.map(formatTokenForDisplay).join('')}►r∠θ`;
+              S.resText = formatComplex(S.lastComplex, 3, S.fracMode);
+              render();
+            } else {
+              addToken('►r∠θ');
+            }
+          } else {
+            addToken('Pol(');
+          }
           return;
         }
         if (k === 'SUB') {
-          if (S.mode === 'CMPLX') addToken('►a+bi');
-          else addToken('Rec(');
+          if (S.mode === 'CMPLX') {
+            if (S.isEvaluated && S.lastComplex) {
+              S.complexView = S.cmplxDisplayStyle === 'DEFAULT' ? 1 : 0;
+              S.topOverride = `${S.tokens.map(formatTokenForDisplay).join('')}►a+bi`;
+              S.resText = formatComplex(S.lastComplex, S.complexView, S.fracMode);
+              render();
+            } else {
+              addToken('►a+bi');
+            }
+          } else {
+            addToken('Rec(');
+          }
           return;
         }
         if (k === 'MPLUS') {
@@ -3732,7 +4189,7 @@
         case 'SQ': addToken('²'); break;
         case 'CUBE': addToken('³'); break;
         case 'INV': addToken('⁻¹'); break;
-        case 'POW': addToken('^'); break;
+        case 'POW': addToken('^('); break;
         case 'EXP': addToken('×10^'); break;
         case 'ANS': addToken('Ans'); break;
         case 'DMS':
@@ -3843,14 +4300,12 @@
         S.pickerBuf = '';
         if (modeType === 'FMLA_PICK') {
           startFmla(code);
+          return;
         } else if (modeType === 'CONST_PICK') {
-          S.interactive = null;
-          addToken(`CONST_${code}`);
+          pickConst(code);
         } else if (modeType === 'CONV_PICK') {
-          S.interactive = null;
-          addToken(`CONV_${code}`);
+          pickConv(code);
         }
-        return;
       }
 
       if (S.shift && S.isEvaluated && S.lastComplex) {
@@ -3878,21 +4333,34 @@
         return;
       }
 
-      // 修正位置：BASIC_PROMPT 提示輸入響應
       if (S.interactive === 'BASIC_PROMPT') {
         const vName = S.basicWaitingVar;
         let val = S.vars[vName] || 0;
-        if (S.tokens.length > 0) val = evaluateTokens(S.tokens).c.re;
+        try {
+          if (S.tokens.length > 0) val = evaluateTokens(S.tokens).c.re;
+        } catch (err) {
+          S.resText = 'Syntax ERROR';
+          S.isEvaluated = true;
+          S.interactive = null;
+          render();
+          return;
+        }
         S.vars[vName] = cleanNum(val);
         S.ansVal = cleanNum(val);
         S.rawNum = cleanNum(val);
         S.resText = formatNumber(val);
+        S.promptText = `${vName}=`;
         S.tokens = [];
         S.cursor = 0;
         S.interactive = null;
         S.basicWaitingVar = null;
         S.basicPc++;
-        stepBasicExecution();
+        if (S.basicPc < S.basicStmts.length) {
+          stepBasicExecution();
+        } else {
+          S.isEvaluated = true;
+          render();
+        }
         return;
       }
 
@@ -3950,7 +4418,6 @@
         return;
       }
 
-      // 修正位置：多語句/Basic指令轉字串保留原本關鍵 Token
       if (S.tokens.includes(':') || S.tokens.includes('◢') || S.tokens.includes('?') || S.tokens.includes('⇒')) {
         const scriptStr = S.tokens.map(t => {
           if (t === 'nPr' || t === 'nCr') return t;
@@ -3968,7 +4435,7 @@
         S.histIdx = S.history.length;
         S.promptText = '';
 
-        const { c, hasFrac, hasDms, polarFlag } = evaluateTokens(S.tokens);
+        const { c, hasFrac, hasDms, polarFlag, rectFlag } = evaluateTokens(S.tokens);
         S.lastComplex = c;
         S.ansVal = cleanNum(c.re);
         S.rawNum = cleanNum(c.re);
@@ -3976,7 +4443,7 @@
 
         if (S.mode === 'BASE') {
           S.resText = formatBase(c.re);
-        } else if (S.mode === 'CMPLX' || Math.abs(c.im) > 1e-11 || polarFlag) {
+        } else if (S.mode === 'CMPLX' || Math.abs(c.im) > 1e-11 || polarFlag || rectFlag) {
           if (polarFlag) {
             S.complexView = 3;
           } else {
@@ -4036,11 +4503,21 @@
       pressExe();
     }
 
+    function demoPowParen() {
+      if (S.isOff) pressOn();
+      if (S.mode !== 'COMP') switchMode('COMP');
+      S.interactive = null;
+      S.tokens = ['2', '^(' , '3', '+', '1', ')'];
+      S.cursor = S.tokens.length;
+      S.isEvaluated = false;
+      pressExe();
+    }
+
     function demoDmsCalc() {
       if (S.isOff) pressOn();
       if (S.mode !== 'COMP') switchMode('COMP');
       S.interactive = null;
-      S.tokens = ['1', '2', '°', '3', '0', '°', '+', '0', '°', '4', '5', '°'];
+      S.tokens = ['1', '2', '°', '3', '0', '°', '+', '0', '°', '4', '5', '°', '0', '°'];
       S.cursor = S.tokens.length;
       S.isEvaluated = false;
       pressExe();
@@ -4106,6 +4583,19 @@
         root.setAttribute('data-theme', 'dark');
         document.getElementById('themeBtn').innerText = '☀ 淺色';
       }
+    }
+
+    function downloadCode() {
+      const full = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+      const blob = new Blob([full], { type: 'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'CASIO-fx-50FH-II-Minimalist.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     }
 
     window.addEventListener('keydown', e => {
