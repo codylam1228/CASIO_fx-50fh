@@ -269,7 +269,7 @@
     }
 
     .prompt-lbl {
-      font-size: 13px;
+      font-size: 16px;
       font-weight: 700;
       margin-right: 6px;
       white-space: nowrap;
@@ -953,6 +953,7 @@
               <span id="ind-S" class="ind">S</span>
               <span id="ind-A" class="ind">A</span>
               <span id="ind-M" class="ind">M</span>
+              <span id="ind-PRGM" class="ind">PRGM</span>
               <span id="ind-STO" class="ind">STO</span>
               <span id="ind-RCL" class="ind">RCL</span>
               <span id="ind-HYP" class="ind">HYP</span>
@@ -2892,6 +2893,10 @@
       }
       lcdEl.classList.remove('off');
 
+      // 1. 點亮 PRGM 狀態燈
+      const isPrgmMode = Boolean(S.interactive === 'BASIC_PROMPT' || S.interactive === 'PROG_PICK' || S.basicStmts.length > 0 || S.basicDispPaused);
+      document.getElementById('ind-PRGM').classList.toggle('on', isPrgmMode);
+
       document.getElementById('ind-S').classList.toggle('on', S.shift);
       document.getElementById('ind-A').classList.toggle('on', S.alpha);
       document.getElementById('ind-M').classList.toggle('on', S.vars.M !== 0);
@@ -3089,19 +3094,19 @@
         return;
       }
       if (S.interactive === 'BASIC_PROMPT') {
-        const slotObj = S.slots[S.activeSlotIdx];
-        if (S.tokens.length > 0) {
-          const dispTokens = S.tokens.map(formatTokenForDisplay);
-          const leftStr = dispTokens.slice(0, S.cursor).join('');
-          const rightStr = dispTokens.slice(S.cursor).join('');
-          const curClass = S.insMode ? 'cursor-ins' : 'cursor-blink';
-          up.innerHTML = `${safe(leftStr)}<span class="${curClass}">_</span>${safe(rightStr)}`;
-          lw.innerText = dispTokens.join('');
-        } else {
-          up.innerText = slotObj && slotObj.id !== 'empty' ? `P${S.activeSlotIdx}:${slotObj.title}` : 'Input?';
-          lw.innerText = S.resText;
-        }
+        const vName = S.basicWaitingVar;
+        const storedVal = S.vars[vName] !== undefined ? S.vars[vName] : 0;
+        
+        // 1. 頂行（Line 1）：左上角顯示輸入算式與游標
+        const dispTokens = S.tokens.map(formatTokenForDisplay);
+        const leftStr = dispTokens.slice(0, S.cursor).join('');
+        const rightStr = dispTokens.slice(S.cursor).join('');
+        const curClass = S.insMode ? 'cursor-ins' : 'cursor-blink';
+        up.innerHTML = `${safe(leftStr)}<span class="${curClass}">_</span>${safe(rightStr)}`;
+
+        // 2. 底行（Line 2）：左側顯示提示字元 (A?)，右側固定顯示變數現有數值 (16.)
         pm.innerText = S.promptText;
+        lw.innerText = formatNumber(storedVal);
         return;
       }
       if (S.interactive === 'FMLA_RUN') {
