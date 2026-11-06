@@ -257,6 +257,18 @@
 
     .lcd-input::-webkit-scrollbar { display: none; }
 
+    .lcd-op {
+      font-family: inherit;
+      font-weight: 900;
+      text-shadow: 
+        0.9px 0 0 currentColor, 
+        -0.3px 0 0 currentColor, 
+        0 0.5px 0 currentColor;
+      display: inline-block;
+      letter-spacing: -0.5px;
+      margin: 0 1px;
+    }
+
     .lcd-result {
       font-family: var(--font-mono);
       font-size: 23px;
@@ -446,7 +458,6 @@
     .grid-6 { display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; }
     .grid-5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
 
-    /* 修復 1：移除固定高度 height: 640px，改用 min-height 與 fit-content 防止子容器撐破遮蔽底部圓角 */
     .side-panel {
       flex: 1;
       width: 100%;
@@ -532,7 +543,6 @@
       display: flex;
     }
 
-    /* 修復 1：外層卡片容器使用 height: fit-content; min-height: auto; 並保留底部內距 */
     .card-block {
       background-color: var(--chip-bg);
       border: 1px solid var(--border-color);
@@ -575,7 +585,6 @@
       gap: 6px;
     }
 
-    /* 修復 2：編程工具列改用 CSS Grid 緊湊網格對齊，消除第二行獨立掉行與左側留白過大問題 */
     .basic-toolbar {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(68px, 1fr));
@@ -583,7 +592,6 @@
       margin-bottom: 8px;
     }
 
-    /* 修復 3：按鈕內部加上 inline-flex、垂直居中與 4px 間距，避免特殊符號與文字貼太近或偏斜 */
     .pill-btn {
       display: inline-flex;
       align-items: center;
@@ -825,7 +833,6 @@
       flex-shrink: 0;
     }
 
-    /* 修復 1：確保編輯框良好包覆於父卡片內，不會超出底部邊界 */
     .code-area {
       display: block;
       width: 100%;
@@ -844,7 +851,6 @@
       font-variant-emoji: text;
     }
 
-    /* 修復 3：調整 ◢ 符號垂直居中與行高，配合按鈕 gap: 4px 完美對齊基線 */
     .disp-tri {
       font-family: "Segoe UI Symbol", "Apple Symbols", sans-serif;
       font-size: 9.5px;
@@ -930,7 +936,6 @@
 <body>
 
   <div class="app-layout">
-    <!-- 左側：極簡主義 CASIO fx-50FH II -->
     <div class="calc-case">
       <div>
         <div class="top-header">
@@ -946,7 +951,6 @@
           <span>SUPER-FX PLUS</span>
         </div>
 
-        <!-- LCD 顯示屏 -->
         <div class="lcd-screen" id="lcdScreen">
           <div class="lcd-badges">
             <div class="badge-sub">
@@ -983,7 +987,6 @@
       </div>
 
       <div>
-        <!-- 頂部控制鍵群 -->
         <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 5px; align-items: center; margin-bottom: 6px;">
           <div style="grid-column: span 2; display: flex; flex-direction: column; gap: 5px;">
             <div style="display: flex; justify-content: space-around;">
@@ -1042,7 +1045,6 @@
           </div>
         </div>
 
-        <!-- 科學函數鍵區 (6x3) -->
         <div class="grid-6" style="margin-bottom: 6px;">
           <div class="key-unit">
             <div class="lbl-row-top"><span class="c-shift">d/c</span></div>
@@ -1123,7 +1125,6 @@
           </div>
         </div>
 
-        <!-- 主數字鍵區 (5x4) -->
         <div class="grid-5">
           <div class="key-unit">
             <div class="lbl-row-top"><span class="c-shift">CONST</span></div>
@@ -1212,7 +1213,6 @@
       </div>
     </div>
 
-    <!-- 右側：極簡分頁式 DSE 實戰工作台 -->
     <div class="side-panel">
       <div class="panel-hdr">
         <div>
@@ -1225,7 +1225,6 @@
         </div>
       </div>
 
-      <!-- 計算機模式切換列 -->
       <div class="bar-group">
         <button id="tab-COMP" class="tab-btn active" onclick="switchMode('COMP')">1: COMP</button>
         <button id="tab-CMPLX" class="tab-btn" onclick="switchMode('CMPLX')">2: CMPLX</button>
@@ -1233,14 +1232,12 @@
         <button id="tab-BASE" class="tab-btn" onclick="switchMode('BASE')">4: BASE</button>
       </div>
 
-      <!-- 工作台分頁切換列 -->
       <div class="bar-group">
         <button id="ws-tab-main" class="tab-btn active" onclick="switchWorkspace('main')">變數與算式紀錄</button>
         <button id="ws-tab-prog" class="tab-btn" onclick="switchWorkspace('prog')">P1–P4 拖放與 Basic 編程</button>
         <button id="ws-tab-ref" class="tab-btn" onclick="switchWorkspace('ref')">FMLA / CONST / CONV</button>
       </div>
 
-      <!-- 分頁 1：變數、算式歷史紀錄與動態狀態卡 -->
       <div id="ws-main" class="ws-section active">
         <div id="fracCardBlock" class="card-block" style="display: flex; justify-content: space-between; align-items: center; padding: 6px 10px;">
           <span style="font-size: 11px; font-weight: 800; color: var(--text-muted);">分數格式 (MODE×5)</span>
@@ -1319,7 +1316,6 @@
         </div>
       </div>
 
-      <!-- 分頁 2：P1–P4 拖放插槽、程式庫 Pool 與 Casio Basic 直譯編輯器 -->
       <div id="ws-prog" class="ws-section">
         <div class="card-block" style="padding: 8px 10px;">
           <div class="sec-title" style="margin-bottom: 5px;">
@@ -1346,7 +1342,6 @@
               <button class="pill-btn" onclick="saveAndRunActiveSlot()">儲存至當前 Slot 並執行 ▶</button>
             </div>
           </div>
-          <!-- 修復 2 & 3：採用 CSS Grid 統一網格對齊，並透過 inline-flex + gap: 4px 修正 ◢ 符號垂直居中與間距 -->
           <div class="basic-toolbar">
             <button class="pill-btn" onclick="insertBasicToken('?→')">?→ 輸入</button>
             <button class="pill-btn" onclick="insertBasicToken('→')">→ 賦值</button>
@@ -1364,7 +1359,6 @@
         </div>
       </div>
 
-      <!-- 分頁 3：23 FMLA / 40 CONST / 40 CONV 速查表 -->
       <div id="ws-ref" class="ws-section">
         <div class="card-block flex-grow-card" style="margin-bottom: 0;">
           <div class="sec-title">
@@ -1382,9 +1376,6 @@
   </div>
 
   <script>
-    // =========================================================================
-    // 1. 複數與精確數學核心類別 (Complex & Exact Math)
-    // =========================================================================
     class Complex {
       constructor(re = 0, im = 0) {
         this.re = Number(re) || 0;
@@ -1433,9 +1424,6 @@
       conj() { return new Complex(this.re, -this.im); }
     }
 
-    // =========================================================================
-    // 2. 真機 40 個科學常數 (CONST 01 - 40, CODATA 標準)
-    // =========================================================================
     const CONST_DATA = {
       '01': { sym: 'mp', name: '質子質量', val: 1.672621777e-27 },
       '02': { sym: 'mn', name: '中子質量', val: 1.674927351e-27 },
@@ -1479,9 +1467,6 @@
       '40': { sym: 'atm', name: '標準大氣壓(Pa)', val: 101325 }
     };
 
-    // =========================================================================
-    // 3. 真機 40 組單位轉換 (CONV 01 - 40)
-    // =========================================================================
     const CONV_DATA = {
       '01': { lbl: 'in►cm', fn: x => x * 2.54 },
       '02': { lbl: 'cm►in', fn: x => x / 2.54 },
@@ -1537,9 +1522,6 @@
     const SORTED_CONV_LBLS = Object.keys(REV_CONV_MAP).sort((a, b) => b.length - a.length);
     const SORTED_CONST_SYMS = Object.keys(REV_CONST_MAP).sort((a, b) => b.length - a.length);
 
-    // =========================================================================
-    // 4. 真機完整 23 條內建公式 (FMLA 01 - 23)
-    // =========================================================================
     const BUILTIN_FMLA = {
       '01': { name: '01:Quadratic', desc: 'ax²+bx+c=0', vars: ['a', 'b', 'c'], execute: ({ a, b, c }) => {
         const d = b * b - 4 * a * c;
@@ -1630,9 +1612,6 @@
       ]}
     };
 
-    // =========================================================================
-    // 5. DSE 程式池 (Program Pool)
-    // =========================================================================
     const PROGRAM_POOL = [
       {
         id: 'quad',
@@ -1723,9 +1702,6 @@
 
     const SLOTS_STORAGE_KEY = 'CASIO_FX50FH_II_SLOTS_V4';
 
-    // =========================================================================
-    // 6. 計算機全域狀態 (State)
-    // =========================================================================
     const S = {
       isOff: false,
       mode: 'COMP',
@@ -1813,9 +1789,6 @@
     }
     loadSlotsFromStorage();
 
-    // =========================================================================
-    // 7. 基礎數學與格式化輔助函數
-    // =========================================================================
     function degToRad(d) {
       if (S.angle === 'R') return d;
       if (S.angle === 'G') return (d * Math.PI) / 200;
@@ -1857,17 +1830,13 @@
       if (!Number.isFinite(val)) return null;
       if (Math.abs(val) > 0 && Math.abs(val) < 1e-6) return null;
       if (Math.abs(val) >= 1e9) return null;
-      
-      // 整數直接返回
       if (Math.abs(val - Math.round(val)) < 1e-10) {
         return { sign: val < 0 ? -1 : 1, intPart: Math.abs(Math.round(val)), num: 0, den: 1 };
       }
-      
       const sign = val < 0 ? -1 : 1;
       val = Math.abs(val);
       const intPart = Math.floor(val);
       const frac = val - intPart;
-      
       let h1 = 1, h2 = 0, k1 = 0, k2 = 1, b = frac, iter = 0;
       do {
         const a = Math.floor(b);
@@ -1876,15 +1845,10 @@
         if (Math.abs(b - a) < 1e-12) break;
         b = 1 / (b - a);
         iter++;
-      } while (Math.abs(frac - h1 / k1) > 1e-10 && k1 < 1000 && iter < 15); // 嚴格限制 1e-10 與分母 < 1000
-
-      // 判定是否達到精確逼近
+      } while (Math.abs(frac - h1 / k1) > 1e-10 && k1 < 1000 && iter < 15);
       if (Math.abs(frac - h1 / k1) > 1e-10 || k1 >= 1000) return null;
-      
-      // 檢查位數是否符合 Casio 螢幕限制 (帶分數總位數限制)
       const totalDigits = String(intPart).length + String(h1).length + String(k1).length;
       if (totalDigits > 10) return null;
-
       return { sign, intPart, num: h1, den: k1 };
     }
 
@@ -2036,9 +2000,6 @@
       btnDec.classList.toggle('active-sub', activeMode === 0);
     }
 
-    // =========================================================================
-    // 8. 原子 Token 語法分析器 (完整支援 CONST, CONV, ^( 連帶括號冪次運算)
-    // =========================================================================
     const PAREN_FUNCTIONS = [
       'sin(', 'cos(', 'tan(', 'sin⁻¹(', 'cos⁻¹(', 'tan⁻¹(',
       'sinh(', 'cosh(', 'tanh(', 'sinh⁻¹(', 'cosh⁻¹(', 'tanh⁻¹(',
@@ -2290,7 +2251,6 @@
         i++;
       }
 
-      // 合併度分秒 (DMS)
       const dmsMerged = [];
       let j = 0;
       while (j < lexed.length) {
@@ -2316,7 +2276,6 @@
         }
       }
 
-      // 合併分數 (a⌟b⌟c 或 b⌟c)
       const fracMerged = [];
       for (let k = 0; k < dmsMerged.length; k++) {
         if (
@@ -2516,9 +2475,6 @@
       return { c: finalComplex, hasFrac, hasDms, polarFlag, rectFlag };
     }
 
-    // =========================================================================
-    // 9. 強化版 Casio Basic 直譯器
-    // =========================================================================
     function tokenizeBasicString(str) {
       let s = str.trim()
         .replace(/\*|×/g, '×')
@@ -2530,12 +2486,9 @@
         .replace(/<=/g, '≤')
         .replace(/sqrt\(/gi, '√(');
 
-      s = s.replace(/\s+nCr\s+/gi, 'nCr').replace(/\s+nPr\s+/gi, 'nPr');
       s = s.replace(/\bnCr\b/gi, 'nCr').replace(/\bnPr\b/gi, 'nPr');
-      s = s.replace(/(\d|\)|[A-FXYM])\s+C\s+(\d|\(|[A-FXYM])/g, '$1nCr$2');
-      s = s.replace(/(\d|\)|[A-FXYM])\s+P\s+(\d|\(|[A-FXYM])/g, '$1nPr$2');
-      s = s.replace(/(\d|\))\s*C\s*(\d|\()/g, '$1nCr$2');
-      s = s.replace(/(\d|\))\s*P\s*(\d|\()/g, '$1nPr$2');
+      s = s.replace(/(\d|\))\s*C\s*(\d|\()/gi, '$1nCr$2');
+      s = s.replace(/(\d|\))\s*P\s*(\d|\()/gi, '$1nPr$2');
 
       const multiTokens = [
         ...PAREN_FUNCTIONS,
@@ -2839,15 +2792,12 @@
       render();
     }
 
-    // =========================================================================
-    // 10. 顯示屏渲染與工作台更新
-    // =========================================================================
     function formatTokenForDisplay(t) {
       if (t.startsWith('CONST_')) return CONST_DATA[t.slice(6)].sym;
       if (t.startsWith('CONV_')) return CONV_DATA[t.slice(5)].lbl;
-      if (t === 'nPr') return 'P';
-      if (t === 'nCr') return 'C';
-      return t;
+      if (t === 'nPr') return '<span class="lcd-op">P</span>';
+      if (t === 'nCr') return '<span class="lcd-op">C</span>';
+      return safe(t);
     }
 
     function currentRadix() {
@@ -2904,7 +2854,6 @@
       }
       lcdEl.classList.remove('off');
 
-      // 1. 點亮 PRGM 狀態燈
       const isPrgmMode = Boolean(S.interactive === 'BASIC_PROMPT' || S.interactive === 'PROG_PICK' || S.basicStmts.length > 0 || S.basicDispPaused);
       document.getElementById('ind-PRGM').classList.toggle('on', isPrgmMode);
 
@@ -3089,7 +3038,7 @@
         const curCode = S.pickerBuf.length === 2 ? S.pickerBuf : codes[S.pickerScrollIdx % codes.length];
         const cObj = CONST_DATA[curCode];
         const curExpr = S.tokens.length > 0 && !S.isEvaluated ? S.tokens.map(formatTokenForDisplay).join('') + ' ' : '';
-        up.innerHTML = `${safe(curExpr)}Const?[${S.pickerBuf || curCode}]`;
+        up.innerHTML = `${curExpr}Const?[${S.pickerBuf || curCode}]`;
         pm.innerText = cObj ? `${curCode}:${cObj.sym}` : '';
         lw.innerText = cObj ? formatNumber(cObj.val) : '01-40';
         return;
@@ -3099,7 +3048,7 @@
         const curCode = S.pickerBuf.length === 2 ? S.pickerBuf : codes[S.pickerScrollIdx % codes.length];
         const cvObj = CONV_DATA[curCode];
         const curExpr = S.tokens.length > 0 && !S.isEvaluated ? S.tokens.map(formatTokenForDisplay).join('') + ' ' : '';
-        up.innerHTML = `${safe(curExpr)}Conv?[${S.pickerBuf || curCode}]`;
+        up.innerHTML = `${curExpr}Conv?[${S.pickerBuf || curCode}]`;
         pm.innerText = '';
         lw.innerText = cvObj ? `${curCode}:${cvObj.lbl}` : '01-40';
         return;
@@ -3108,14 +3057,12 @@
         const vName = S.basicWaitingVar;
         const storedVal = S.vars[vName] !== undefined ? S.vars[vName] : 0;
         
-        // 1. 頂行（Line 1）：左上角顯示輸入算式與游標
         const dispTokens = S.tokens.map(formatTokenForDisplay);
         const leftStr = dispTokens.slice(0, S.cursor).join('');
         const rightStr = dispTokens.slice(S.cursor).join('');
         const curClass = S.insMode ? 'cursor-ins' : 'cursor-blink';
-        up.innerHTML = `${safe(leftStr)}<span class="${curClass}">_</span>${safe(rightStr)}`;
+        up.innerHTML = `${leftStr}<span class="${curClass}">_</span>${rightStr}`;
 
-        // 2. 底行（Line 2）：左側顯示提示字元 (A?)，右側固定顯示變數現有數值 (16.)
         pm.innerText = S.promptText;
         lw.innerText = formatNumber(storedVal);
         return;
@@ -3129,26 +3076,25 @@
 
       const dispTokens = S.tokens.map(formatTokenForDisplay);
       if (S.topOverride) {
-        up.innerText = S.topOverride;
+        // up.innerHTML = safe(S.topOverride);
+        up.innerHTML = S.topOverride;
       } else if (S.isEvaluated) {
-        up.innerText = dispTokens.join('');
+        up.innerHTML = dispTokens.join('');
       } else {
         const leftStr = dispTokens.slice(0, S.cursor).join('');
         const rightStr = dispTokens.slice(S.cursor).join('');
         const curClass = S.insMode ? 'cursor-ins' : 'cursor-blink';
-        up.innerHTML = `${safe(leftStr)}<span class="${curClass}">_</span>${safe(rightStr)}`;
+        up.innerHTML = `${leftStr}<span class="${curClass}">_</span>${rightStr}`;
       }
       pm.innerText = S.promptText;
       lw.innerText = S.resText;
     }
 
     function safe(s) {
+      if (typeof s !== 'string') return s;
       return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    // =========================================================================
-    // 11. P1–P4 程式槽與跨平台 PointerEvents 拖放系統
-    // =========================================================================
     let ptrDragState = null;
 
     function renderSlotsAndPool(flashSlotIdx = null) {
@@ -3398,9 +3344,6 @@
       executeSlot(S.activeSlotIdx);
     }
 
-    // =========================================================================
-    // 12. 歷史紀錄與速查表
-    // =========================================================================
     function pushAuditTape(exprStr, resStr, tokensSnapshot) {
       S.auditTape.unshift({ expr: exprStr, res: resStr, tokens: [...tokensSnapshot] });
       if (S.auditTape.length > 30) S.auditTape.pop();
@@ -3415,7 +3358,7 @@
       }
       el.innerHTML = S.auditTape.map((item, idx) => `
         <div class="tape-item" onclick="loadTapeItem(${idx})" title="點擊回載此算式">
-          <span>${safe(item.expr)}</span>
+          <span>${item.expr}</span>
           <b>= ${safe(item.res)}</b>
         </div>
       `).join('');
@@ -3513,9 +3456,6 @@
       render();
     }
 
-    // =========================================================================
-    // 13. 按鍵操作處理器
-    // =========================================================================
     function switchMode(m) {
       if (S.isOff) return;
       S.mode = m;
@@ -3829,10 +3769,7 @@
       if (S.isOff) return;
       const isShift = S.shift;
       S.shift = false;
-      
-      // 增加對 FMLA_RUN 輸出狀態的判斷
       const isFmlaOutput = S.interactive === 'FMLA_RUN' && S.progOutputs.length > 0;
-      
       if (S.isEvaluated || isFmlaOutput) {
         if (isShift) {
           S.fracMode = S.fracMode === 2 ? 1 : 2;
@@ -4268,9 +4205,6 @@
       }
     }
 
-    // =========================================================================
-    // 14. EXE 執行與 BASIC Prompt 互動修復
-    // =========================================================================
     function pressExe() {
       if (S.isOff) return;
 
@@ -4491,9 +4425,6 @@
       render();
     }
 
-    // =========================================================================
-    // 15. 自訂編程編輯器與示範函數
-    // =========================================================================
     function insertBasicToken(str) {
       const ed = document.getElementById('basicEditor');
       const start = ed.selectionStart;
